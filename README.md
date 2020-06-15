@@ -11,4 +11,4 @@
 | Item          | Description |
 | ------------- | ------------- |
 | Central Control System  |  On-board computer. Etherent connectivity to external measurement equipment. |
-| Cora-Z7-07  | Content Cell  |
+| Cora-Z7-07  | Digilent low cost development board (see [here](https://store.digilentinc.com/cora-z7-zynq-7000-single-core-and-dual-core-options-for-arm-fpga-soc-development)) featuring a Xilinx Zynq 7007 SoC FPGA. 1Gbps Ethernet PHY, USB hub, 45 arduino compatible IOs (3.3V CMOS)|
