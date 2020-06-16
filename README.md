@@ -15,7 +15,7 @@
 * **RAM**. 512MB DDR3 memory. Accessible to both PS and PL (via DMA).
 * **Python Server**. Devoted to the configuration/operation of the PL. It is has direct access to the data stored in the RAM memory. Control commands and data are transferred via the 1Gbps etherent PHY.  
  * **FSM**. Finite state machine implementing the TDC logic. Expected temporal resolution: 5ns (sampling on both edges of a 100 MHz clk). Operational modes: 
-    * Direct: photon timestamps are saved on RAM. Data at RAM have to be readout before starting a new measurement.
+    * Direct: photon timestamps are saved on RAM. Data at RAM has to be readout before starting a new measurement.
     * Histogram: the accumulated counts for each time bin are saved on RAM. During a measurement the counters are are incremented by 1 if a photon has been received during the correspondig time bin. We expect to use 16 bit counters (at least 2^15-1 measurement results can be combined before readout). 
 * **PLL**. Phase lock loop. 
 * **DMA**. Direct memory access. Streams data from RAM to FSM and vice-versa. 
