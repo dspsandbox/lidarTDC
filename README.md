@@ -1,17 +1,22 @@
 # lidarTDC
 ## System requirements
-* Time-to-digital converter (TDC) with a temporal resolution better than 10 ns and an integration time of up to 2 ms.
+* Time-to-digital converter (TDC) for atmospheric Lidar applications
+* Temporal resolution better than 10 ns 
+* Integration time of up to 2 ms.
 * Trigger input
 * 8 bit temporal timestamp prefix
 * External ref clk (10MHz)
 
 ## System architecture
 ![System architecture](doc/lidarTDC.png)
-
-* **Cora-Z7-07**. Digilent low cost development board (see [here](https://store.digilentinc.com/cora-z7-zynq-7000-single-core-and-dual-core-options-for-arm-fpga-soc-development)) featuring a Xilinx Zynq 7007 SoC FPGA, 1Gbps Ethernet PHY, RAM memory, USB hub, 45 arduino compatible IOs (3.3V CMOS)...|
-* **Zynq7007 FPGA**. System on a chip. Contains a 32bit-ARM processing sytem (PS) and programable logic (PL). |
-* **RAM**. 512MB DDR3 on-board memory. Accessible to both PS and PL (via DMA).|
-* **Python Server**. Devoted to the configuration/operation of the PL. It is has direct access to the data storen in the RAM memory. Control commands and data connected are transfered via the 1Gbps etherent PHY.  |
-* **FSM**. Finite state machine implementing the TDC logic. Operating modes: direct / historgram (explained below).  |
+* **Central Control System** Measurement control and analaysis unit. Configures peripheral devices via ethernet.
+* **Cora-Z7-07**. Digilent low cost development board (see [here](https://store.digilentinc.com/cora-z7-zynq-7000-single-core-and-dual-core-options-for-arm-fpga-soc-development)) featuring a Xilinx Zynq 7007 SoC FPGA, 1Gbps Ethernet PHY, RAM memory, USB hub, 45 Arduino compatible IOs (3.3V CMOS)...|
+* **Zynq7007 FPGA**. System on a chip. Contains a 32bit-ARM processing system (PS) and programable logic (PL). |
+* **RAM**. 512MB DDR3 memory. Accessible to both PS and PL (via DMA).|
+* **Python Server**. Devoted to the configuration/operation of the PL. It is has direct access to the data stored in the RAM memory. Control commands and data connected are transferred via the 1Gbps etherent PHY.  |
+ * **FSM**. Finite state machine implementing the TDC logic. Expected temporal resolution: 5ns (sampling on both edges of a 100 MHz clk). Operational modes: 
+ * * Direct: only received photon timestamps are sent to RAM (over DMA).
+ * * Histogram: the counts at each time bin are saved on RAM. During a measurement the counter remains unchanged and is only incremented by 1 when a photon on that particular time bin has been received. 
 * **PLL**. Phase lock loop. |
-* **DMA**. Direct memory access. Streams data from RAM to FSM and vice-versa.  |
+* **DMA**. Direct memory access. Streams data from RAM to FSM and vice-versa. 
+
