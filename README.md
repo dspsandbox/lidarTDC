@@ -9,7 +9,7 @@
 
 ## System architecture
 ![System architecture](doc/lidarTDC.png)
-* **Central Control System** Measurement control and analaysis unit. Configures peripheral devices via ethernet.
+* **Central Control System**. Central control, orchestration and analaysis unit. Configures peripheral devices via ethernet.
 * **Cora-Z7-07**. Digilent low cost development board (see [here](https://store.digilentinc.com/cora-z7-zynq-7000-single-core-and-dual-core-options-for-arm-fpga-soc-development)) featuring a Xilinx Zynq 7007 SoC FPGA, 1Gbps Ethernet PHY, RAM memory, USB hub, 45 Arduino compatible IOs (3.3V CMOS)...|
 * **Zynq7007 FPGA**. System on a chip. Contains a 32bit-ARM processing system (PS) and programable logic (PL). |
 * **RAM**. 512MB DDR3 memory. Accessible to both PS and PL (via DMA).|
