@@ -16,7 +16,7 @@
 * **RAM**. 512MB DDR3 memory. Accessible to both PS and PL (via DMA).
 * **Python Server**. Devoted to the configuration/operation of the PL. It is has direct access to the data stored in the RAM memory. Communication with the Central Control System is performed over the 1Gbps etherent PHY.  
  * **FSM**. Finite state machine implementing the TDC logic. Expected temporal resolution: 5ns (sampling on both edges of a 100 MHz clk). 64 bit time stamping: 
-    * 23-00 : counter (in units of 5ns). Maximu intgeration time of 33ms.
+    * 23-00 : counter (in units of 5ns). Maximum intgeration time of 33ms.
     * 31-24 : external timestamp 
     * 63-32 : mask (used to mark the inputs on which a rising edge has been detected). Up to 32 detectors.
 * **PLL**. Phase lock loop. 
