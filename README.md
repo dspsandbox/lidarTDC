@@ -3,6 +3,7 @@
 * Time-to-digital converter (TDC) for atmospheric Lidar applications
 * Temporal resolution better than 10 ns 
 * Integration times up to 2 ms
+* Multiple input ports (N=5)
 * Trigger input
 * 8 bit temporal timestamp prefix
 * External ref clk (10MHz)
@@ -14,9 +15,10 @@
 * **Zynq7007 FPGA**. System on a chip. Contains a 32bit-ARM processing system (PS) and programable logic (PL). 
 * **RAM**. 512MB DDR3 memory. Accessible to both PS and PL (via DMA).
 * **Python Server**. Devoted to the configuration/operation of the PL. It is has direct access to the data stored in the RAM memory. Communication with the Central Control System is performed over the 1Gbps etherent PHY.  
- * **FSM**. Finite state machine implementing the TDC logic. Expected temporal resolution: 5ns (sampling on both edges of a 100 MHz clk). Operational modes: 
-    * Direct: photon timestamps are saved on RAM. Data at RAM has to be readout before starting a new measurement.
-    * Histogram: the accumulated counts for each time bin are saved on RAM. During a measurement the counters are are incremented by 1 if a photon has been received during the correspondig time bin. We expect to use 16 bit counters (at least 2^15-1 measurement results can be combined before readout). 
+ * **FSM**. Finite state machine implementing the TDC logic. Expected temporal resolution: 5ns (sampling on both edges of a 100 MHz clk). 64 bit time stamping: 
+    * 31-0 : counter (in units of 5ns)
+    * 55-32 : mask (used to mark the inputs on which a rising edge has been detected)
+    * 63-56 : external timestamp 
 * **PLL**. Phase lock loop. 
 * **DMA**. Direct memory access. Streams data from RAM to FSM and vice-versa. 
 
