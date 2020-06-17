@@ -15,10 +15,10 @@
 * **Zynq7007 FPGA**. System on a chip. Contains a 32bit-ARM processing system (PS) and programable logic (PL). 
 * **RAM**. 512MB DDR3 memory. Accessible to both PS and PL (via DMA).
 * **Python Server**. Devoted to the configuration/operation of the PL. It is has direct access to the data stored in the RAM memory. Communication with the Central Control System is performed over the 1Gbps etherent PHY.  
- * **FSM**. Finite state machine implementing the TDC logic. Expected temporal resolution: 5ns (sampling on both edges of a 100 MHz clk). 64 bit time stamping: 
+ * **FSM**. Finite state machine implementing the TDC logic. Expected temporal resolution: 5ns (sampling on both edges of a 100 MHz clk). 64bit time stamping: 
     * 23-00 : counter (in units of 5ns). Maximum integration time of 33ms.
     * 31-24 : external timestamp 
     * 63-32 : mask (used to mark the inputs on which a rising edge has been detected). Up to separate 32 detectors.
 * **PLL**. Phase lock loop. 
-* **DMA**. Direct memory access. Streams data from RAM to FSM and vice-versa. 
+* **DMA**. Direct memory access. Streams 64bit timestamps from FSM to RAM. 
 
