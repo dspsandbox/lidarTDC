@@ -1,4 +1,5 @@
 *
 !.gitignore
 !*.xpr
+!*.srcs
 !*.srcs/*
