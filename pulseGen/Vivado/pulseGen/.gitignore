@@ -1,4 +1,5 @@
 *
 !.gitignore
-!*.xpr
+!pulseGen.srcs.xpr
+!pulseGen.srcs
 !pulseGen.srcs/*
