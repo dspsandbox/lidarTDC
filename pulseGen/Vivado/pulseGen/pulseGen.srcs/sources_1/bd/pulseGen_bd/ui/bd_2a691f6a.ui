@@ -1,0 +1,47 @@
+{
+   "ExpandedHierarchyInLayout":"",
+   "guistr":"# # String gsaved with Nlview 6.8.11  2018-08-07 bk=1.4403 VDI=40 GEI=35 GUI=JA:9.0 non-TLS
+#  -string -flagsOSRD
+preplace port DDR -pg 1 -y 440 -defaultsOSRD
+preplace port FIXED_IO -pg 1 -y 470 -defaultsOSRD
+preplace portBus led0_g -pg 1 -y 190 -defaultsOSRD
+preplace portBus pulse -pg 1 -y 100 -defaultsOSRD
+preplace portBus led0_b -pg 1 -y 290 -defaultsOSRD
+preplace portBus trig -pg 1 -y 20 -defaultsOSRD
+preplace portBus timestamp -pg 1 -y 130 -defaultsOSRD
+preplace portBus led0_r -pg 1 -y 390 -defaultsOSRD
+preplace inst xlslice_resetn -pg 1 -lvl 3 -y 160 -defaultsOSRD
+preplace inst pulseGen_0 -pg 1 -lvl 4 -y 130 -defaultsOSRD -resize 272 182
+preplace inst axi_dma_0 -pg 1 -lvl 2 -y 90 -defaultsOSRD
+preplace inst PS_interconnect -pg 1 -lvl 1 -y 510 -defaultsOSRD -resize 242 198
+preplace inst axi_gpio_0 -pg 1 -lvl 2 -y 360 -defaultsOSRD
+preplace inst xlslice_idle -pg 1 -lvl 5 -y 190 -defaultsOSRD
+preplace inst xlslice_err -pg 1 -lvl 5 -y 390 -defaultsOSRD
+preplace inst xlslice_pulseDuration -pg 1 -lvl 3 -y 360 -defaultsOSRD
+preplace inst xlslice_trig -pg 1 -lvl 3 -y 260 -defaultsOSRD
+preplace inst xlslice_run -pg 1 -lvl 5 -y 290 -defaultsOSRD
+preplace netloc processing_system7_0_DDR 1 1 5 NJ 450 NJ 450 NJ 450 NJ 450 1430J
+preplace netloc pulseGen_0_timestamp 1 4 2 NJ 130 N
+preplace netloc xlslice_run_Dout 1 5 1 N
+preplace netloc xlslice_idle_Dout 1 5 1 N
+preplace netloc xlslice_trig_Dout 1 3 3 900 20 N 20 N
+preplace netloc PS_interconnect_M01_AXI 1 1 1 320
+preplace netloc pulseGen_0_pulse 1 4 2 N 100 NJ
+preplace netloc pulseGen_0_state 1 2 3 680 420 N 420 1230
+preplace netloc xlslice_0_Dout1 1 3 1 890
+preplace netloc axi_dma_0_M_AXI_MM2S 1 0 3 20 190 NJ 190 670
+preplace netloc axi_gpio_0_gpio_io_o 1 2 1 690
+preplace netloc processing_system7_0_FIXED_IO 1 1 5 NJ 470 NJ 470 NJ 470 NJ 470 NJ
+preplace netloc rst_ps7_0_50M_peripheral_aresetn 1 1 1 350
+preplace netloc xlslice_err_Dout 1 5 1 N
+preplace netloc processing_system7_0_FCLK_CLK0 1 1 3 330 180 680 100 N
+preplace netloc axi_dma_0_M_AXIS_MM2S 1 2 2 N 80 N
+preplace netloc ps7_0_axi_periph_M00_AXI 1 1 1 340
+preplace netloc xlslice_0_Dout 1 3 1 910
+levelinfo -pg 1 0 170 510 790 1070 1330 1450 -top 0 -bot 620
+"
+}
+{
+   "da_axi4_cnt":"3",
+   "da_ps7_cnt":"1"
+}

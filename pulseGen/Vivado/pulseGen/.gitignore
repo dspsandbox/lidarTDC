@@ -1,5 +1,9 @@
-*
-!.gitignore
-!pulseGen.xpr
-!/pulseGen.srcs
-!/pulseGen.srcs/*
+*.cache
+*.hw
+*.ip_user_files
+*.runs
+*.sdk
+*.sim
+*.jou
+*.log
+*.tcl
