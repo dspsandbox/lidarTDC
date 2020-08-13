@@ -1,9 +1,9 @@
 # lidarTDC
 ## System requirements
 * Time-to-digital converter (TDC) for atmospheric Lidar applications
-* Temporal resolution better than 10 ns 
-* Measurment window of up to 2 ms
-* Multiple input ports (N=5)
+* Temporal resolution <= 10 ns 
+* Measurment window >= 2 ms
+* Multiple input ports (N >= 5)
 * Trigger input
 * 8 bit temporal timestamp prefix
 * External ref clk (10MHz)
@@ -15,8 +15,8 @@
 * **Zynq7010 FPGA**. System on a chip. Contains a 32bit-ARM processing system (PS) and programable logic (PL). 
 * **RAM**. 512MB DDR3 memory. Accessible to both PS and PL (via DMA).
 * **Python Server**. Devoted to the configuration/operation of the PL. It is has direct access to the data stored in the RAM memory. Communication with the Central Control System is performed over the 1Gbps etherent PHY.  
- * **FSM**. Finite state machine implementing the TDC logic. Expected temporal resolution: 5ns (sampling on both edges of a 100 MHz clk). 64bit time stamping: 
-    * 23-00 : counter (in units of 5ns). Max measurement window: 33ms.
+ * **FSM**. Finite state machine implementing the TDC logic. Expected temporal resolution: 10ns (sampling on rising edge of a 100 MHz clk). 64bit time stamping: 
+    * 23-00 : counter (max integration time: 167 ms ).
     * 31-24 : external timestamp. 
     * 63-32 : mask (used to mark the inputs on which a rising edge has been detected). Max number of detectors: 32.
 * **PLL**. Phase lock loop. 
