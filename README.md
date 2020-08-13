@@ -2,7 +2,7 @@
 ## System requirements
 * Time-to-digital converter (TDC) for atmospheric Lidar applications
 * Temporal resolution <= 10 ns 
-* Measurment window >= 2 ms
+* Integration time >= 2 ms
 * Multiple input ports (N >= 5)
 * Trigger input
 * 8 bit temporal timestamp prefix
