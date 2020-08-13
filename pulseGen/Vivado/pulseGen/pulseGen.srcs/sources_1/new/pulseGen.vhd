@@ -81,7 +81,7 @@ begin
                 counter_reg <= (others => '0');
                 trig_reg <= '0';
                 pulse_reg <= (others => '0');
-                tready_reg <= '1'; --flushes dma
+                tready_reg <= '0'; 
                 tlast_reg <= '0';
                 data_counter_reg <= (others => '0');
                 data_timestamp_reg <= (others => '0');
@@ -141,7 +141,9 @@ begin
                             state_reg <= run;
                         end if;
                          
-                    when others => null;    
+                    when others => 
+                        --flush DMA
+                        tready_reg <= '1';     
                 end case;                 
             end if;
         end if;

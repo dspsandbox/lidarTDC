@@ -66,8 +66,10 @@ architecture Behavioral of pulseAcq is
     signal pulse_reg0 : std_logic_vector (CHANNELS - 1 downto 0) := (others =>'0');
     signal pulse_reg1 : std_logic_vector (CHANNELS - 1 downto 0) := (others =>'0');
     signal pulse_reg2 : std_logic_vector (CHANNELS - 1 downto 0) := (others =>'0');
+    signal timestamp_reg0 : STD_LOGIC_VECTOR (TIMESTAMP_WIDTH - 1 downto 0) := (others => '0');
+    signal timestamp_reg1 : STD_LOGIC_VECTOR (TIMESTAMP_WIDTH - 1 downto 0) := (others => '0');
+    signal timestamp_reg2 : STD_LOGIC_VECTOR (TIMESTAMP_WIDTH - 1 downto 0) := (others => '0');
     signal counterMax_reg : unsigned (COUNTER_WIDTH - 1 downto 0) := (others => '0');
-    signal timestamp_reg : STD_LOGIC_VECTOR (TIMESTAMP_WIDTH - 1 downto 0) := (others => '0');
     signal streamUpCounter_reg: unsigned (COUNTER_WIDTH - 1 downto 0) := (others => '0');
     signal tdata_reg  : std_logic_vector (MASK_WIDTH + TIMESTAMP_WIDTH + COUNTER_WIDTH - 1 downto 0)  := (others => '0');
     signal tvalid_reg : std_logic := '0';
@@ -92,9 +94,11 @@ begin
                 pulse_reg0 <= (others => '0');
                 pulse_reg1 <= (others => '0');
                 pulse_reg2 <= (others => '0');
+                timestamp_reg0 <= (others => '0');
+                timestamp_reg1 <= (others => '0');
+                timestamp_reg2 <= (others => '0');
                 counterMax_reg <= (others => '0');
                 streamUpCounter_reg <= (others => '0');
-                timestamp_reg <= (others => '0');
                 tdata_reg <= (others => '0');
                 tvalid_reg <= '0';
                 tlast_reg <= '0';
@@ -111,8 +115,12 @@ begin
                pulse_reg1 <= pulse_reg0;
                pulse_reg2 <= pulse_reg1;
                
+               timestamp_reg0 <= timestamp;
+               timestamp_reg1 <= timestamp_reg0;
+               timestamp_reg2 <= timestamp_reg1;
+               
                counterMax_reg <= unsigned(counterMax);
-               timestamp_reg <= timestamp;
+               
             
                 case state_reg is
                     when idle  =>
@@ -124,19 +132,21 @@ begin
                         data_timestamp_reg <= (others => '0');
                         data_mask_reg <= (others => '0');         
                                           
-                        if trig_reg2 = '1' and trig_reg1 = '0' then
+                        if trig_reg1 = '1' and trig_reg2 = '0' then
                             state_reg <= run;
-                        else 
-                            state_reg <= idle;
+                            streamUpCounter_reg <= (others => '0');
+                        else
+                            state_reg <= state_reg;
+                            streamUpCounter_reg <= streamUpCounter_reg;
                         end if;
                         
                     when run =>
                         counter_reg <= counter_reg + 1;
                         
                         data_counter_reg <= std_logic_vector(counter_reg);
-                        data_timestamp_reg <= timestamp_reg;
+                        data_timestamp_reg <= timestamp_reg2;
                         for i in 0 to CHANNELS - 1 loop
-                            if (pulse_reg1(i)='0') and (pulse_reg2(i)='1') then
+                            if (pulse_reg1(i)='1') and (pulse_reg2(i)='0') then
                                 data_mask_reg(i) <= '1';    
                             else
                                 data_mask_reg(i) <= '0';
@@ -147,8 +157,11 @@ begin
                             if data_mask_reg/=zeroMask then
                                 tdata_reg <= data_mask_reg & data_timestamp_reg & data_counter_reg;
                                 tvalid_reg <= '1';
-                                tlast_reg <= '0';
-                            end if;    
+                            else
+                                tdata_reg <= tdata_reg;
+                                tvalid_reg <= '0';
+                            end if;  
+                            tlast_reg <= '0';  
                         else
                             tdata_reg <= (others => '0');
                             tvalid_reg <= '1';
@@ -169,7 +182,8 @@ begin
                         end if; 
                                                 
                     when others => 
-                        tdata_reg <= (others => '0');
+                        --flush DMA
+                        tdata_reg <= (others => '0'); 
                         tvalid_reg <= '1';
                         tlast_reg <= '1';    
                     

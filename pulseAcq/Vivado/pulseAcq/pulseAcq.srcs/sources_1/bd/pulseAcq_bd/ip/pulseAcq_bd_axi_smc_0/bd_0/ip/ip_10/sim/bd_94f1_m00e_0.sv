@@ -192,7 +192,7 @@ output wire m_axi_bready;
     .C_IS_CASCADED(0),
     .C_SSC_ROUTE_WIDTH(1),
     .C_MEP_IDENTIFIER_WIDTH(1),
-    .C_SSC_ROUTE_ARRAY(2'B10),
+    .C_SSC_ROUTE_ARRAY(2'B01),
     .C_RDATA_WIDTH(64),
     .C_WDATA_WIDTH(64),
     .C_M_RUSER_BITS_PER_BYTE(0),
