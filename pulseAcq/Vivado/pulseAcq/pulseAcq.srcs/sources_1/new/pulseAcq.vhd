@@ -68,7 +68,6 @@ architecture Behavioral of pulseAcq is
     signal pulse_reg2 : std_logic_vector (CHANNELS - 1 downto 0) := (others =>'0');
     signal timestamp_reg0 : STD_LOGIC_VECTOR (TIMESTAMP_WIDTH - 1 downto 0) := (others => '0');
     signal timestamp_reg1 : STD_LOGIC_VECTOR (TIMESTAMP_WIDTH - 1 downto 0) := (others => '0');
-    signal timestamp_reg2 : STD_LOGIC_VECTOR (TIMESTAMP_WIDTH - 1 downto 0) := (others => '0');
     signal counterMax_reg : unsigned (COUNTER_WIDTH - 1 downto 0) := (others => '0');
     signal streamUpCounter_reg: unsigned (COUNTER_WIDTH - 1 downto 0) := (others => '0');
     signal tdata_reg  : std_logic_vector (MASK_WIDTH + TIMESTAMP_WIDTH + COUNTER_WIDTH - 1 downto 0)  := (others => '0');
@@ -96,7 +95,6 @@ begin
                 pulse_reg2 <= (others => '0');
                 timestamp_reg0 <= (others => '0');
                 timestamp_reg1 <= (others => '0');
-                timestamp_reg2 <= (others => '0');
                 counterMax_reg <= (others => '0');
                 streamUpCounter_reg <= (others => '0');
                 tdata_reg <= (others => '0');
@@ -117,7 +115,6 @@ begin
                
                timestamp_reg0 <= timestamp;
                timestamp_reg1 <= timestamp_reg0;
-               timestamp_reg2 <= timestamp_reg1;
                
                counterMax_reg <= unsigned(counterMax);
                
@@ -144,7 +141,7 @@ begin
                         counter_reg <= counter_reg + 1;
                         
                         data_counter_reg <= std_logic_vector(counter_reg);
-                        data_timestamp_reg <= timestamp_reg2;
+                        data_timestamp_reg <= timestamp_reg1;
                         for i in 0 to CHANNELS - 1 loop
                             if (pulse_reg1(i)='1') and (pulse_reg2(i)='0') then
                                 data_mask_reg(i) <= '1';    
