@@ -1,7 +1,7 @@
 --Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
---Date        : Sun Jul 26 18:20:28 2020
+--Date        : Thu Aug 13 10:25:18 2020
 --Host        : 5CD010B25T running 64-bit major release  (build 9200)
 --Command     : generate_target pulseGen_bd_wrapper.bd
 --Design      : pulseGen_bd_wrapper
@@ -46,6 +46,12 @@ end pulseGen_bd_wrapper;
 architecture STRUCTURE of pulseGen_bd_wrapper is
   component pulseGen_bd is
   port (
+    led0_g : out STD_LOGIC_VECTOR ( 0 to 0 );
+    led0_b : out STD_LOGIC_VECTOR ( 0 to 0 );
+    led0_r : out STD_LOGIC_VECTOR ( 0 to 0 );
+    pulse : out STD_LOGIC_VECTOR ( 7 downto 0 );
+    timestamp : out STD_LOGIC_VECTOR ( 7 downto 0 );
+    trig : out STD_LOGIC_VECTOR ( 0 to 0 );
     DDR_cas_n : inout STD_LOGIC;
     DDR_cke : inout STD_LOGIC;
     DDR_ck_n : inout STD_LOGIC;
@@ -66,13 +72,7 @@ architecture STRUCTURE of pulseGen_bd_wrapper is
     FIXED_IO_ddr_vrp : inout STD_LOGIC;
     FIXED_IO_ps_srstb : inout STD_LOGIC;
     FIXED_IO_ps_clk : inout STD_LOGIC;
-    FIXED_IO_ps_porb : inout STD_LOGIC;
-    led0_g : out STD_LOGIC_VECTOR ( 0 to 0 );
-    led0_b : out STD_LOGIC_VECTOR ( 0 to 0 );
-    led0_r : out STD_LOGIC_VECTOR ( 0 to 0 );
-    pulse : out STD_LOGIC_VECTOR ( 7 downto 0 );
-    timestamp : out STD_LOGIC_VECTOR ( 7 downto 0 );
-    trig : out STD_LOGIC_VECTOR ( 0 to 0 )
+    FIXED_IO_ps_porb : inout STD_LOGIC
   );
   end component pulseGen_bd;
 begin

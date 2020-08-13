@@ -40,7 +40,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# pulseGen
+# pulseGen, pulseStretcher
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -163,6 +163,7 @@ set bCheckModules 1
 if { $bCheckModules == 1 } {
    set list_check_mods "\ 
 pulseGen\
+pulseStretcher\
 "
 
    set list_mods_missing ""
@@ -789,6 +790,7 @@ proc create_root_design { parentCell } {
    CONFIG.c_m_axis_mm2s_tdata_width {64} \
    CONFIG.c_mm2s_burst_size {32} \
    CONFIG.c_sg_include_stscntrl_strm {0} \
+   CONFIG.c_sg_length_width {24} \
  ] $axi_dma_0
 
   # Create instance: axi_gpio_0, and set properties
@@ -816,6 +818,21 @@ proc create_root_design { parentCell } {
    CONFIG.CHANNELS {8} \
  ] $pulseGen_0
 
+  # Create instance: pulseStretcher_0, and set properties
+  set block_name pulseStretcher
+  set block_cell_name pulseStretcher_0
+  if { [catch {set pulseStretcher_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_msg_id "BD_TCL-105" "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $pulseStretcher_0 eq "" } {
+     catch {common::send_msg_id "BD_TCL-106" "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+    set_property -dict [ list \
+   CONFIG.COUNTER_WIDTH {24} \
+   CONFIG.PORT_WIDTH {8} \
+ ] $pulseStretcher_0
+
   # Create instance: xlslice_err, and set properties
   set xlslice_err [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_err ]
   set_property -dict [ list \
@@ -833,14 +850,14 @@ proc create_root_design { parentCell } {
    CONFIG.DIN_WIDTH {3} \
  ] $xlslice_idle
 
-  # Create instance: xlslice_pulseDuration, and set properties
-  set xlslice_pulseDuration [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_pulseDuration ]
+  # Create instance: xlslice_pulseWidth, and set properties
+  set xlslice_pulseWidth [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_pulseWidth ]
   set_property -dict [ list \
    CONFIG.DIN_FROM {25} \
    CONFIG.DIN_TO {2} \
    CONFIG.DIN_WIDTH {26} \
    CONFIG.DOUT_WIDTH {23} \
- ] $xlslice_pulseDuration
+ ] $xlslice_pulseWidth
 
   # Create instance: xlslice_resetn, and set properties
   set xlslice_resetn [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_resetn ]
@@ -878,14 +895,15 @@ proc create_root_design { parentCell } {
   connect_bd_intf_net -intf_net ps7_0_axi_periph_M00_AXI [get_bd_intf_pins PS_interconnect/M00_AXI] [get_bd_intf_pins axi_gpio_0/S_AXI]
 
   # Create port connections
-  connect_bd_net -net axi_gpio_0_gpio_io_o [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_pulseDuration/Din] [get_bd_pins xlslice_resetn/Din] [get_bd_pins xlslice_trig/Din]
-  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins PS_interconnect/FCLK_CLK0] [get_bd_pins axi_dma_0/m_axi_mm2s_aclk] [get_bd_pins axi_dma_0/s_axi_lite_aclk] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins pulseGen_0/clk]
-  connect_bd_net -net pulseGen_0_pulse [get_bd_ports pulse] [get_bd_pins pulseGen_0/pulse]
+  connect_bd_net -net axi_gpio_0_gpio_io_o [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_pulseWidth/Din] [get_bd_pins xlslice_resetn/Din] [get_bd_pins xlslice_trig/Din]
+  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins PS_interconnect/FCLK_CLK0] [get_bd_pins axi_dma_0/m_axi_mm2s_aclk] [get_bd_pins axi_dma_0/s_axi_lite_aclk] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins pulseGen_0/clk] [get_bd_pins pulseStretcher_0/clk]
+  connect_bd_net -net pulseGen_0_pulse [get_bd_pins pulseGen_0/pulse] [get_bd_pins pulseStretcher_0/pulseIn]
   connect_bd_net -net pulseGen_0_state [get_bd_pins axi_gpio_0/gpio2_io_i] [get_bd_pins pulseGen_0/state] [get_bd_pins xlslice_err/Din] [get_bd_pins xlslice_idle/Din] [get_bd_pins xlslice_run/Din]
   connect_bd_net -net pulseGen_0_timestamp [get_bd_ports timestamp] [get_bd_pins pulseGen_0/timestamp]
+  connect_bd_net -net pulseStretcher_0_pulseOut [get_bd_ports pulse] [get_bd_pins pulseStretcher_0/pulseOut]
   connect_bd_net -net rst_ps7_0_50M_peripheral_aresetn [get_bd_pins PS_interconnect/peripheral_aresetn] [get_bd_pins axi_dma_0/axi_resetn] [get_bd_pins axi_gpio_0/s_axi_aresetn]
-  connect_bd_net -net xlslice_0_Dout [get_bd_pins pulseGen_0/pulseDuration] [get_bd_pins xlslice_pulseDuration/Dout]
-  connect_bd_net -net xlslice_0_Dout1 [get_bd_pins pulseGen_0/resetn] [get_bd_pins xlslice_resetn/Dout]
+  connect_bd_net -net xlslice_0_Dout [get_bd_pins pulseStretcher_0/pulseWidth] [get_bd_pins xlslice_pulseWidth/Dout]
+  connect_bd_net -net xlslice_0_Dout1 [get_bd_pins pulseGen_0/resetn] [get_bd_pins pulseStretcher_0/resetn] [get_bd_pins xlslice_resetn/Dout]
   connect_bd_net -net xlslice_err_Dout [get_bd_ports led0_r] [get_bd_pins xlslice_err/Dout]
   connect_bd_net -net xlslice_idle_Dout [get_bd_ports led0_g] [get_bd_pins xlslice_idle/Dout]
   connect_bd_net -net xlslice_run_Dout [get_bd_ports led0_b] [get_bd_pins xlslice_run/Dout]

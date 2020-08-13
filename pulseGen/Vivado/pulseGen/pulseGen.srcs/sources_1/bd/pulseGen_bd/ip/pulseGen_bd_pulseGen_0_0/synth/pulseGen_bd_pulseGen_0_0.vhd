@@ -58,7 +58,6 @@ ENTITY pulseGen_bd_pulseGen_0_0 IS
     clk : IN STD_LOGIC;
     resetn : IN STD_LOGIC;
     trig : IN STD_LOGIC;
-    pulseDuration : IN STD_LOGIC_VECTOR(23 DOWNTO 0);
     pulse : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
     timestamp : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
     streamDown_tdata : IN STD_LOGIC_VECTOR(63 DOWNTO 0);
@@ -83,7 +82,6 @@ ARCHITECTURE pulseGen_bd_pulseGen_0_0_arch OF pulseGen_bd_pulseGen_0_0 IS
       clk : IN STD_LOGIC;
       resetn : IN STD_LOGIC;
       trig : IN STD_LOGIC;
-      pulseDuration : IN STD_LOGIC_VECTOR(23 DOWNTO 0);
       pulse : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
       timestamp : OUT STD_LOGIC_VECTOR(7 DOWNTO 0);
       streamDown_tdata : IN STD_LOGIC_VECTOR(63 DOWNTO 0);
@@ -124,7 +122,6 @@ BEGIN
       clk => clk,
       resetn => resetn,
       trig => trig,
-      pulseDuration => pulseDuration,
       pulse => pulse,
       timestamp => timestamp,
       streamDown_tdata => streamDown_tdata,

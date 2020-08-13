@@ -1,7 +1,7 @@
 --Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
---Date        : Sun Jul 26 18:20:28 2020
+--Date        : Thu Aug 13 10:25:18 2020
 --Host        : 5CD010B25T running 64-bit major release  (build 9200)
 --Command     : generate_target pulseGen_bd.bd
 --Design      : pulseGen_bd
@@ -550,21 +550,21 @@ entity pulseGen_bd_ps7_0_axi_periph_0 is
     M01_ACLK : in STD_LOGIC;
     M01_ARESETN : in STD_LOGIC;
     M01_AXI_araddr : out STD_LOGIC_VECTOR ( 31 downto 0 );
-    M01_AXI_arready : in STD_LOGIC_VECTOR ( 0 to 0 );
-    M01_AXI_arvalid : out STD_LOGIC_VECTOR ( 0 to 0 );
+    M01_AXI_arready : in STD_LOGIC;
+    M01_AXI_arvalid : out STD_LOGIC;
     M01_AXI_awaddr : out STD_LOGIC_VECTOR ( 31 downto 0 );
-    M01_AXI_awready : in STD_LOGIC_VECTOR ( 0 to 0 );
-    M01_AXI_awvalid : out STD_LOGIC_VECTOR ( 0 to 0 );
-    M01_AXI_bready : out STD_LOGIC_VECTOR ( 0 to 0 );
+    M01_AXI_awready : in STD_LOGIC;
+    M01_AXI_awvalid : out STD_LOGIC;
+    M01_AXI_bready : out STD_LOGIC;
     M01_AXI_bresp : in STD_LOGIC_VECTOR ( 1 downto 0 );
-    M01_AXI_bvalid : in STD_LOGIC_VECTOR ( 0 to 0 );
+    M01_AXI_bvalid : in STD_LOGIC;
     M01_AXI_rdata : in STD_LOGIC_VECTOR ( 31 downto 0 );
-    M01_AXI_rready : out STD_LOGIC_VECTOR ( 0 to 0 );
+    M01_AXI_rready : out STD_LOGIC;
     M01_AXI_rresp : in STD_LOGIC_VECTOR ( 1 downto 0 );
-    M01_AXI_rvalid : in STD_LOGIC_VECTOR ( 0 to 0 );
+    M01_AXI_rvalid : in STD_LOGIC;
     M01_AXI_wdata : out STD_LOGIC_VECTOR ( 31 downto 0 );
-    M01_AXI_wready : in STD_LOGIC_VECTOR ( 0 to 0 );
-    M01_AXI_wvalid : out STD_LOGIC_VECTOR ( 0 to 0 );
+    M01_AXI_wready : in STD_LOGIC;
+    M01_AXI_wvalid : out STD_LOGIC;
     S00_ACLK : in STD_LOGIC;
     S00_ARESETN : in STD_LOGIC;
     S00_AXI_araddr : in STD_LOGIC_VECTOR ( 31 downto 0 );
@@ -671,20 +671,20 @@ architecture STRUCTURE of pulseGen_bd_ps7_0_axi_periph_0 is
   signal m00_couplers_to_ps7_0_axi_periph_WSTRB : STD_LOGIC_VECTOR ( 3 downto 0 );
   signal m00_couplers_to_ps7_0_axi_periph_WVALID : STD_LOGIC_VECTOR ( 0 to 0 );
   signal m01_couplers_to_ps7_0_axi_periph_ARADDR : STD_LOGIC_VECTOR ( 31 downto 0 );
-  signal m01_couplers_to_ps7_0_axi_periph_ARREADY : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal m01_couplers_to_ps7_0_axi_periph_ARREADY : STD_LOGIC;
   signal m01_couplers_to_ps7_0_axi_periph_ARVALID : STD_LOGIC;
   signal m01_couplers_to_ps7_0_axi_periph_AWADDR : STD_LOGIC_VECTOR ( 31 downto 0 );
-  signal m01_couplers_to_ps7_0_axi_periph_AWREADY : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal m01_couplers_to_ps7_0_axi_periph_AWREADY : STD_LOGIC;
   signal m01_couplers_to_ps7_0_axi_periph_AWVALID : STD_LOGIC;
   signal m01_couplers_to_ps7_0_axi_periph_BREADY : STD_LOGIC;
   signal m01_couplers_to_ps7_0_axi_periph_BRESP : STD_LOGIC_VECTOR ( 1 downto 0 );
-  signal m01_couplers_to_ps7_0_axi_periph_BVALID : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal m01_couplers_to_ps7_0_axi_periph_BVALID : STD_LOGIC;
   signal m01_couplers_to_ps7_0_axi_periph_RDATA : STD_LOGIC_VECTOR ( 31 downto 0 );
   signal m01_couplers_to_ps7_0_axi_periph_RREADY : STD_LOGIC;
   signal m01_couplers_to_ps7_0_axi_periph_RRESP : STD_LOGIC_VECTOR ( 1 downto 0 );
-  signal m01_couplers_to_ps7_0_axi_periph_RVALID : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal m01_couplers_to_ps7_0_axi_periph_RVALID : STD_LOGIC;
   signal m01_couplers_to_ps7_0_axi_periph_WDATA : STD_LOGIC_VECTOR ( 31 downto 0 );
-  signal m01_couplers_to_ps7_0_axi_periph_WREADY : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal m01_couplers_to_ps7_0_axi_periph_WREADY : STD_LOGIC;
   signal m01_couplers_to_ps7_0_axi_periph_WVALID : STD_LOGIC;
   signal ps7_0_axi_periph_ACLK_net : STD_LOGIC;
   signal ps7_0_axi_periph_ARESETN_net : STD_LOGIC;
@@ -792,13 +792,13 @@ begin
   M00_AXI_wstrb(3 downto 0) <= m00_couplers_to_ps7_0_axi_periph_WSTRB(3 downto 0);
   M00_AXI_wvalid(0) <= m00_couplers_to_ps7_0_axi_periph_WVALID(0);
   M01_AXI_araddr(31 downto 0) <= m01_couplers_to_ps7_0_axi_periph_ARADDR(31 downto 0);
-  M01_AXI_arvalid(0) <= m01_couplers_to_ps7_0_axi_periph_ARVALID;
+  M01_AXI_arvalid <= m01_couplers_to_ps7_0_axi_periph_ARVALID;
   M01_AXI_awaddr(31 downto 0) <= m01_couplers_to_ps7_0_axi_periph_AWADDR(31 downto 0);
-  M01_AXI_awvalid(0) <= m01_couplers_to_ps7_0_axi_periph_AWVALID;
-  M01_AXI_bready(0) <= m01_couplers_to_ps7_0_axi_periph_BREADY;
-  M01_AXI_rready(0) <= m01_couplers_to_ps7_0_axi_periph_RREADY;
+  M01_AXI_awvalid <= m01_couplers_to_ps7_0_axi_periph_AWVALID;
+  M01_AXI_bready <= m01_couplers_to_ps7_0_axi_periph_BREADY;
+  M01_AXI_rready <= m01_couplers_to_ps7_0_axi_periph_RREADY;
   M01_AXI_wdata(31 downto 0) <= m01_couplers_to_ps7_0_axi_periph_WDATA(31 downto 0);
-  M01_AXI_wvalid(0) <= m01_couplers_to_ps7_0_axi_periph_WVALID;
+  M01_AXI_wvalid <= m01_couplers_to_ps7_0_axi_periph_WVALID;
   S00_AXI_arready <= ps7_0_axi_periph_to_s00_couplers_ARREADY;
   S00_AXI_awready <= ps7_0_axi_periph_to_s00_couplers_AWREADY;
   S00_AXI_bid(11 downto 0) <= ps7_0_axi_periph_to_s00_couplers_BID(11 downto 0);
@@ -818,14 +818,14 @@ begin
   m00_couplers_to_ps7_0_axi_periph_RRESP(1 downto 0) <= M00_AXI_rresp(1 downto 0);
   m00_couplers_to_ps7_0_axi_periph_RVALID(0) <= M00_AXI_rvalid(0);
   m00_couplers_to_ps7_0_axi_periph_WREADY(0) <= M00_AXI_wready(0);
-  m01_couplers_to_ps7_0_axi_periph_ARREADY(0) <= M01_AXI_arready(0);
-  m01_couplers_to_ps7_0_axi_periph_AWREADY(0) <= M01_AXI_awready(0);
+  m01_couplers_to_ps7_0_axi_periph_ARREADY <= M01_AXI_arready;
+  m01_couplers_to_ps7_0_axi_periph_AWREADY <= M01_AXI_awready;
   m01_couplers_to_ps7_0_axi_periph_BRESP(1 downto 0) <= M01_AXI_bresp(1 downto 0);
-  m01_couplers_to_ps7_0_axi_periph_BVALID(0) <= M01_AXI_bvalid(0);
+  m01_couplers_to_ps7_0_axi_periph_BVALID <= M01_AXI_bvalid;
   m01_couplers_to_ps7_0_axi_periph_RDATA(31 downto 0) <= M01_AXI_rdata(31 downto 0);
   m01_couplers_to_ps7_0_axi_periph_RRESP(1 downto 0) <= M01_AXI_rresp(1 downto 0);
-  m01_couplers_to_ps7_0_axi_periph_RVALID(0) <= M01_AXI_rvalid(0);
-  m01_couplers_to_ps7_0_axi_periph_WREADY(0) <= M01_AXI_wready(0);
+  m01_couplers_to_ps7_0_axi_periph_RVALID <= M01_AXI_rvalid;
+  m01_couplers_to_ps7_0_axi_periph_WREADY <= M01_AXI_wready;
   ps7_0_axi_periph_ACLK_net <= ACLK;
   ps7_0_axi_periph_ARESETN_net <= ARESETN;
   ps7_0_axi_periph_to_s00_couplers_ARADDR(31 downto 0) <= S00_AXI_araddr(31 downto 0);
@@ -901,20 +901,20 @@ m01_couplers: entity work.m01_couplers_imp_D9UK96
       M_ACLK => ps7_0_axi_periph_ACLK_net,
       M_ARESETN => ps7_0_axi_periph_ARESETN_net,
       M_AXI_araddr(31 downto 0) => m01_couplers_to_ps7_0_axi_periph_ARADDR(31 downto 0),
-      M_AXI_arready => m01_couplers_to_ps7_0_axi_periph_ARREADY(0),
+      M_AXI_arready => m01_couplers_to_ps7_0_axi_periph_ARREADY,
       M_AXI_arvalid => m01_couplers_to_ps7_0_axi_periph_ARVALID,
       M_AXI_awaddr(31 downto 0) => m01_couplers_to_ps7_0_axi_periph_AWADDR(31 downto 0),
-      M_AXI_awready => m01_couplers_to_ps7_0_axi_periph_AWREADY(0),
+      M_AXI_awready => m01_couplers_to_ps7_0_axi_periph_AWREADY,
       M_AXI_awvalid => m01_couplers_to_ps7_0_axi_periph_AWVALID,
       M_AXI_bready => m01_couplers_to_ps7_0_axi_periph_BREADY,
       M_AXI_bresp(1 downto 0) => m01_couplers_to_ps7_0_axi_periph_BRESP(1 downto 0),
-      M_AXI_bvalid => m01_couplers_to_ps7_0_axi_periph_BVALID(0),
+      M_AXI_bvalid => m01_couplers_to_ps7_0_axi_periph_BVALID,
       M_AXI_rdata(31 downto 0) => m01_couplers_to_ps7_0_axi_periph_RDATA(31 downto 0),
       M_AXI_rready => m01_couplers_to_ps7_0_axi_periph_RREADY,
       M_AXI_rresp(1 downto 0) => m01_couplers_to_ps7_0_axi_periph_RRESP(1 downto 0),
-      M_AXI_rvalid => m01_couplers_to_ps7_0_axi_periph_RVALID(0),
+      M_AXI_rvalid => m01_couplers_to_ps7_0_axi_periph_RVALID,
       M_AXI_wdata(31 downto 0) => m01_couplers_to_ps7_0_axi_periph_WDATA(31 downto 0),
-      M_AXI_wready => m01_couplers_to_ps7_0_axi_periph_WREADY(0),
+      M_AXI_wready => m01_couplers_to_ps7_0_axi_periph_WREADY,
       M_AXI_wvalid => m01_couplers_to_ps7_0_axi_periph_WVALID,
       S_ACLK => ps7_0_axi_periph_ACLK_net,
       S_ARESETN => ps7_0_axi_periph_ARESETN_net,
@@ -1318,20 +1318,20 @@ architecture STRUCTURE of PS_interconnect_imp_L4020S is
   signal Conn1_RVALID : STD_LOGIC;
   signal Conn2_ARADDR : STD_LOGIC_VECTOR ( 31 downto 0 );
   signal Conn2_ARREADY : STD_LOGIC;
-  signal Conn2_ARVALID : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal Conn2_ARVALID : STD_LOGIC;
   signal Conn2_AWADDR : STD_LOGIC_VECTOR ( 31 downto 0 );
   signal Conn2_AWREADY : STD_LOGIC;
-  signal Conn2_AWVALID : STD_LOGIC_VECTOR ( 0 to 0 );
-  signal Conn2_BREADY : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal Conn2_AWVALID : STD_LOGIC;
+  signal Conn2_BREADY : STD_LOGIC;
   signal Conn2_BRESP : STD_LOGIC_VECTOR ( 1 downto 0 );
   signal Conn2_BVALID : STD_LOGIC;
   signal Conn2_RDATA : STD_LOGIC_VECTOR ( 31 downto 0 );
-  signal Conn2_RREADY : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal Conn2_RREADY : STD_LOGIC;
   signal Conn2_RRESP : STD_LOGIC_VECTOR ( 1 downto 0 );
   signal Conn2_RVALID : STD_LOGIC;
   signal Conn2_WDATA : STD_LOGIC_VECTOR ( 31 downto 0 );
   signal Conn2_WREADY : STD_LOGIC;
-  signal Conn2_WVALID : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal Conn2_WVALID : STD_LOGIC;
   signal axi_smc_M00_AXI_ARADDR : STD_LOGIC_VECTOR ( 31 downto 0 );
   signal axi_smc_M00_AXI_ARBURST : STD_LOGIC_VECTOR ( 1 downto 0 );
   signal axi_smc_M00_AXI_ARCACHE : STD_LOGIC_VECTOR ( 3 downto 0 );
@@ -1470,13 +1470,13 @@ begin
   M00_AXI_wstrb(3 downto 0) <= ps7_0_axi_periph_M00_AXI_WSTRB(3 downto 0);
   M00_AXI_wvalid(0) <= ps7_0_axi_periph_M00_AXI_WVALID(0);
   M01_AXI_araddr(31 downto 0) <= Conn2_ARADDR(31 downto 0);
-  M01_AXI_arvalid <= Conn2_ARVALID(0);
+  M01_AXI_arvalid <= Conn2_ARVALID;
   M01_AXI_awaddr(31 downto 0) <= Conn2_AWADDR(31 downto 0);
-  M01_AXI_awvalid <= Conn2_AWVALID(0);
-  M01_AXI_bready <= Conn2_BREADY(0);
-  M01_AXI_rready <= Conn2_RREADY(0);
+  M01_AXI_awvalid <= Conn2_AWVALID;
+  M01_AXI_bready <= Conn2_BREADY;
+  M01_AXI_rready <= Conn2_RREADY;
   M01_AXI_wdata(31 downto 0) <= Conn2_WDATA(31 downto 0);
-  M01_AXI_wvalid <= Conn2_WVALID(0);
+  M01_AXI_wvalid <= Conn2_WVALID;
   S00_AXI_arready <= Conn1_ARREADY;
   S00_AXI_rdata(63 downto 0) <= Conn1_RDATA(63 downto 0);
   S00_AXI_rlast <= Conn1_RLAST;
@@ -1665,21 +1665,21 @@ ps7_0_axi_periph: entity work.pulseGen_bd_ps7_0_axi_periph_0
       M01_ACLK => processing_system7_0_FCLK_CLK0,
       M01_ARESETN => rst_ps7_0_50M_peripheral_aresetn(0),
       M01_AXI_araddr(31 downto 0) => Conn2_ARADDR(31 downto 0),
-      M01_AXI_arready(0) => Conn2_ARREADY,
-      M01_AXI_arvalid(0) => Conn2_ARVALID(0),
+      M01_AXI_arready => Conn2_ARREADY,
+      M01_AXI_arvalid => Conn2_ARVALID,
       M01_AXI_awaddr(31 downto 0) => Conn2_AWADDR(31 downto 0),
-      M01_AXI_awready(0) => Conn2_AWREADY,
-      M01_AXI_awvalid(0) => Conn2_AWVALID(0),
-      M01_AXI_bready(0) => Conn2_BREADY(0),
+      M01_AXI_awready => Conn2_AWREADY,
+      M01_AXI_awvalid => Conn2_AWVALID,
+      M01_AXI_bready => Conn2_BREADY,
       M01_AXI_bresp(1 downto 0) => Conn2_BRESP(1 downto 0),
-      M01_AXI_bvalid(0) => Conn2_BVALID,
+      M01_AXI_bvalid => Conn2_BVALID,
       M01_AXI_rdata(31 downto 0) => Conn2_RDATA(31 downto 0),
-      M01_AXI_rready(0) => Conn2_RREADY(0),
+      M01_AXI_rready => Conn2_RREADY,
       M01_AXI_rresp(1 downto 0) => Conn2_RRESP(1 downto 0),
-      M01_AXI_rvalid(0) => Conn2_RVALID,
+      M01_AXI_rvalid => Conn2_RVALID,
       M01_AXI_wdata(31 downto 0) => Conn2_WDATA(31 downto 0),
-      M01_AXI_wready(0) => Conn2_WREADY,
-      M01_AXI_wvalid(0) => Conn2_WVALID(0),
+      M01_AXI_wready => Conn2_WREADY,
+      M01_AXI_wvalid => Conn2_WVALID,
       S00_ACLK => processing_system7_0_FCLK_CLK0,
       S00_ARESETN => rst_ps7_0_50M_peripheral_aresetn(0),
       S00_AXI_araddr(31 downto 0) => processing_system7_0_M_AXI_GP0_ARADDR(31 downto 0),
@@ -1770,7 +1770,7 @@ entity pulseGen_bd is
     trig : out STD_LOGIC_VECTOR ( 0 to 0 )
   );
   attribute CORE_GENERATION_INFO : string;
-  attribute CORE_GENERATION_INFO of pulseGen_bd : entity is "pulseGen_bd,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=pulseGen_bd,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=19,numReposBlks=14,numNonXlnxBlks=0,numHierBlks=5,maxHierDepth=1,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=1,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=3,da_ps7_cnt=1,synth_mode=Global}";
+  attribute CORE_GENERATION_INFO of pulseGen_bd : entity is "pulseGen_bd,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=pulseGen_bd,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=20,numReposBlks=15,numNonXlnxBlks=0,numHierBlks=5,maxHierDepth=1,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=2,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=3,da_ps7_cnt=1,synth_mode=Global}";
   attribute HW_HANDOFF : string;
   attribute HW_HANDOFF of pulseGen_bd : entity is "pulseGen_bd.hwdef";
 end pulseGen_bd;
@@ -1885,7 +1885,6 @@ architecture STRUCTURE of pulseGen_bd is
     clk : in STD_LOGIC;
     resetn : in STD_LOGIC;
     trig : in STD_LOGIC;
-    pulseDuration : in STD_LOGIC_VECTOR ( 23 downto 0 );
     pulse : out STD_LOGIC_VECTOR ( 7 downto 0 );
     timestamp : out STD_LOGIC_VECTOR ( 7 downto 0 );
     streamDown_tdata : in STD_LOGIC_VECTOR ( 63 downto 0 );
@@ -1895,6 +1894,15 @@ architecture STRUCTURE of pulseGen_bd is
     state : out STD_LOGIC_VECTOR ( 2 downto 0 )
   );
   end component pulseGen_bd_pulseGen_0_0;
+  component pulseGen_bd_pulseStretcher_0_0 is
+  port (
+    clk : in STD_LOGIC;
+    resetn : in STD_LOGIC;
+    pulseWidth : in STD_LOGIC_VECTOR ( 23 downto 0 );
+    pulseIn : in STD_LOGIC_VECTOR ( 7 downto 0 );
+    pulseOut : out STD_LOGIC_VECTOR ( 7 downto 0 )
+  );
+  end component pulseGen_bd_pulseStretcher_0_0;
   signal PS_interconnect_M01_AXI_ARADDR : STD_LOGIC_VECTOR ( 31 downto 0 );
   signal PS_interconnect_M01_AXI_ARREADY : STD_LOGIC;
   signal PS_interconnect_M01_AXI_ARVALID : STD_LOGIC;
@@ -1971,6 +1979,7 @@ architecture STRUCTURE of pulseGen_bd is
   signal pulseGen_0_pulse : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal pulseGen_0_state : STD_LOGIC_VECTOR ( 2 downto 0 );
   signal pulseGen_0_timestamp : STD_LOGIC_VECTOR ( 7 downto 0 );
+  signal pulseStretcher_0_pulseOut : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal rst_ps7_0_50M_peripheral_aresetn : STD_LOGIC_VECTOR ( 0 to 0 );
   signal xlslice_0_Dout : STD_LOGIC_VECTOR ( 23 downto 0 );
   signal xlslice_0_Dout1 : STD_LOGIC_VECTOR ( 0 to 0 );
@@ -2014,7 +2023,7 @@ begin
   led0_b(0) <= xlslice_run_Dout(0);
   led0_g(0) <= xlslice_idle_Dout(0);
   led0_r(0) <= xlslice_err_Dout(0);
-  pulse(7 downto 0) <= pulseGen_0_pulse(7 downto 0);
+  pulse(7 downto 0) <= pulseStretcher_0_pulseOut(7 downto 0);
   timestamp(7 downto 0) <= pulseGen_0_timestamp(7 downto 0);
   trig(0) <= xlslice_trig_Dout(0);
 PS_interconnect: entity work.PS_interconnect_imp_L4020S
@@ -2159,7 +2168,6 @@ pulseGen_0: component pulseGen_bd_pulseGen_0_0
      port map (
       clk => processing_system7_0_FCLK_CLK0,
       pulse(7 downto 0) => pulseGen_0_pulse(7 downto 0),
-      pulseDuration(23 downto 0) => xlslice_0_Dout(23 downto 0),
       resetn => xlslice_0_Dout1(0),
       state(2 downto 0) => pulseGen_0_state(2 downto 0),
       streamDown_tdata(63 downto 0) => axi_dma_0_M_AXIS_MM2S_TDATA(63 downto 0),
@@ -2168,6 +2176,14 @@ pulseGen_0: component pulseGen_bd_pulseGen_0_0
       streamDown_tvalid => axi_dma_0_M_AXIS_MM2S_TVALID,
       timestamp(7 downto 0) => pulseGen_0_timestamp(7 downto 0),
       trig => xlslice_trig_Dout(0)
+    );
+pulseStretcher_0: component pulseGen_bd_pulseStretcher_0_0
+     port map (
+      clk => processing_system7_0_FCLK_CLK0,
+      pulseIn(7 downto 0) => pulseGen_0_pulse(7 downto 0),
+      pulseOut(7 downto 0) => pulseStretcher_0_pulseOut(7 downto 0),
+      pulseWidth(23 downto 0) => xlslice_0_Dout(23 downto 0),
+      resetn => xlslice_0_Dout1(0)
     );
 xlslice_err: component pulseGen_bd_xlslice_0_4
      port map (
@@ -2179,7 +2195,7 @@ xlslice_idle: component pulseGen_bd_xlslice_0_2
       Din(2 downto 0) => pulseGen_0_state(2 downto 0),
       Dout(0) => xlslice_idle_Dout(0)
     );
-xlslice_pulseDuration: component pulseGen_bd_xlslice_0_0
+xlslice_pulseWidth: component pulseGen_bd_xlslice_0_0
      port map (
       Din(25 downto 0) => axi_gpio_0_gpio_io_o(25 downto 0),
       Dout(23 downto 0) => xlslice_0_Dout(23 downto 0)

@@ -1,0 +1,48 @@
+{
+   "ExpandedHierarchyInLayout":"",
+   "guistr":"# # String gsaved with Nlview 6.8.11  2018-08-07 bk=1.4403 VDI=40 GEI=35 GUI=JA:9.0 non-TLS
+#  -string -flagsOSRD
+preplace port DDR -pg 1 -y 60 -defaultsOSRD
+preplace port FIXED_IO -pg 1 -y 90 -defaultsOSRD
+preplace port trig -pg 1 -y 690 -defaultsOSRD
+preplace portBus led0_g -pg 1 -y 440 -defaultsOSRD
+preplace portBus pulse -pg 1 -y 720 -defaultsOSRD
+preplace portBus led0_b -pg 1 -y 540 -defaultsOSRD
+preplace portBus timestamp -pg 1 -y 750 -defaultsOSRD
+preplace portBus led0_r -pg 1 -y 340 -defaultsOSRD
+preplace inst xlslice_resetn -pg 1 -lvl 4 -y 530 -defaultsOSRD
+preplace inst axi_dma_0 -pg 1 -lvl 3 -y 190 -defaultsOSRD
+preplace inst PS_interconnect -pg 1 -lvl 2 -y 140 -defaultsOSRD -resize 239 222
+preplace inst xlconcat_0 -pg 1 -lvl 6 -y 610 -defaultsOSRD
+preplace inst axi_gpio_0 -pg 1 -lvl 3 -y 360 -defaultsOSRD
+preplace inst xlslice_idle -pg 1 -lvl 7 -y 440 -defaultsOSRD
+preplace inst xlslice_err -pg 1 -lvl 7 -y 340 -defaultsOSRD
+preplace inst xlslice_counterMax -pg 1 -lvl 4 -y 630 -defaultsOSRD
+preplace inst pulseAcq_0 -pg 1 -lvl 5 -y 580 -defaultsOSRD -resize 297 218
+preplace inst xlslice_run -pg 1 -lvl 7 -y 540 -defaultsOSRD
+preplace netloc processing_system7_0_DDR 1 2 6 360 60 N 60 N 60 NJ 60 NJ 60 NJ
+preplace netloc xlslice_run_Dout 1 7 1 NJ
+preplace netloc xlslice_idle_Dout 1 7 1 NJ
+preplace netloc pulseAcq_0_streamUp 1 2 4 370 450 NJ 450 NJ 450 1270
+preplace netloc PS_interconnect_M01_AXI 1 2 1 N
+preplace netloc xlslice_0_Dout1 1 4 1 N
+preplace netloc pulseGen_0_state 1 5 2 1280 540 1490
+preplace netloc pulse_1 1 0 5 NJ 720 N 720 N 720 N 720 920
+preplace netloc xlconcat_0_dout 1 3 4 N 390 N 390 N 390 1480
+preplace netloc axi_gpio_0_gpio_io_o 1 3 1 690
+preplace netloc processing_system7_0_FIXED_IO 1 2 6 N 90 N 90 N 90 NJ 90 NJ 90 NJ
+preplace netloc rst_ps7_0_50M_peripheral_aresetn 1 2 1 340
+preplace netloc axi_dma_0_M_AXI_S2MM 1 1 3 60J 10 NJ 10 690
+preplace netloc pulseAcq_0_streamUpCounter 1 5 1 N
+preplace netloc xlslice_err_Dout 1 7 1 NJ
+preplace netloc processing_system7_0_FCLK_CLK0 1 2 3 360 80 N 80 900
+preplace netloc ps7_0_axi_periph_M00_AXI 1 2 1 350
+preplace netloc timestamp_1 1 0 5 NJ 750 N 750 N 750 N 750 930
+preplace netloc trig_1 1 0 5 NJ 690 NJ 690 NJ 690 NJ 690 910J
+preplace netloc xlslice_0_Dout 1 4 1 900
+levelinfo -pg 1 0 40 200 530 800 1100 1380 1590 1710 -top 0 -bot 770
+"
+}
+{
+   "da_axi4_cnt":"1"
+}

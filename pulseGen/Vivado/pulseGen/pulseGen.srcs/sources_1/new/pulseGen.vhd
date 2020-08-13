@@ -43,7 +43,6 @@ entity pulseGen is
     Port ( clk : in STD_LOGIC;
            resetn : in STD_LOGIC;
            trig : in STD_LOGIC;
-           pulseDuration : in STD_LOGIC_VECTOR (COUNTER_WIDTH - 1 downto 0);
            pulse : out STD_LOGIC_VECTOR (CHANNELS - 1 downto 0);
            timestamp : out STD_LOGIC_VECTOR (TIMESTAMP_WIDTH - 1 downto 0);
            streamDown_tdata : in STD_LOGIC_VECTOR (MASK_WIDTH + TIMESTAMP_WIDTH + COUNTER_WIDTH - 1 downto 0);
@@ -59,10 +58,13 @@ architecture Behavioral of pulseGen is
     signal counter_reg : unsigned (COUNTER_WIDTH - 1 downto 0) := (others => '0');
     signal trig_reg : std_logic := '0';
     signal pulse_reg : std_logic_vector (CHANNELS - 1 downto 0) := (others =>'0');
-    signal pulseDuration_reg : unsigned (COUNTER_WIDTH - 1 downto 0) := (others => '0');
     signal tready_reg : std_logic := '0';
+    signal tdata : STD_LOGIC_VECTOR (MASK_WIDTH + TIMESTAMP_WIDTH + COUNTER_WIDTH - 1 downto 0);
+    signal tvalid : std_logic;
+    signal tlast : std_logic ;
     signal tlast_reg : std_logic := '0';
     signal data_counter_reg : unsigned (COUNTER_WIDTH - 1 downto 0) := (others => '0');
+    signal data_timestamp : std_logic_vector (TIMESTAMP_WIDTH -1 downto 0) := (others => '0');
     signal data_timestamp_reg : std_logic_vector (TIMESTAMP_WIDTH -1 downto 0) := (others => '0');
     signal data_mask_reg : std_logic_vector (MASK_WIDTH -1 downto 0) := (others => '0');
     
@@ -77,7 +79,6 @@ begin
                 counter_reg <= (others => '0');
                 trig_reg <= '0';
                 pulse_reg <= (others => '0');
-                pulseDuration_reg <= (others => '0');
                 tready_reg <= '1'; --flushes dma
                 tlast_reg <= '0';
                 data_counter_reg <= (others => '0');
@@ -86,7 +87,6 @@ begin
                 
             else
                trig_reg <= trig;
-               pulseDuration_reg <= unsigned(pulseDuration);
             
                 case state_reg is
                     when idle  =>
@@ -106,43 +106,37 @@ begin
                         
                     when run =>
                         counter_reg <= counter_reg + 1;
-                        if counter_reg = data_counter_reg then
-                            pulse_reg <= data_mask_reg (CHANNELS -1 downto 0);
-                            tready_reg <= '0';
-                            state_reg <= run;
+                        if (tready_reg = '1' and counter_reg = unsigned(tdata(COUNTER_WIDTH - 1 downto 0))) then
+                            pulse_reg <= tdata(CHANNELS + TIMESTAMP_WIDTH + COUNTER_WIDTH - 1 downto TIMESTAMP_WIDTH + COUNTER_WIDTH);
+                            tready_reg <= '1';
                         else
-                            if counter_reg >= (data_counter_reg + pulseDuration_reg) then
+                            if (tready_reg = '0' and counter_reg = data_counter_reg) then 
+                                pulse_reg <= data_mask_reg(CHANNELS -1 downto 0);
+                                tready_reg <= '1';
+                            else
                                 pulse_reg <= (others => '0');
-                                if tlast_reg='1' then
-                                    tready_reg <= '0';
-                                    state_reg <= idle;
-                                else
-                                    if streamDown_tvalid = '1' then
-                                        if unsigned(streamDown_tdata(COUNTER_WIDTH - 1 downto 0)) > counter_reg then
-                                            data_counter_reg <= unsigned(streamDown_tdata(COUNTER_WIDTH - 1 downto 0));
-                                            data_timestamp_reg <= streamDown_tdata(TIMESTAMP_WIDTH + COUNTER_WIDTH - 1 downto COUNTER_WIDTH);
-                                            data_mask_reg <= streamDown_tdata(MASK_WIDTH + TIMESTAMP_WIDTH + COUNTER_WIDTH - 1 downto TIMESTAMP_WIDTH + COUNTER_WIDTH);
-                                            tlast_reg <= streamDown_tlast;
-                                            tready_reg <= '1'; 
-                                            state_reg <= run;
-                                        else
-                                            tready_reg <= '0'; 
-                                            state_reg <= err;
-                                        end if;
-                                    else
-                                        tready_reg <= '0';
-                                        state_reg <= err;                                   
-                                    end if;
-                                end if;      
-                            
-                            else 
                                 tready_reg <= '0';
-                                state_reg <= run;    
                             end if;
                         end if;
                         
+                        if tready_reg = '1' then
+                            if tlast_reg = '1' then 
+                                state_reg <= idle;   
+                            else                                 
+                                if tvalid = '1' then
+                                    data_counter_reg <= unsigned(tdata(COUNTER_WIDTH - 1 downto 0));
+                                    data_timestamp_reg <= tdata(TIMESTAMP_WIDTH + COUNTER_WIDTH - 1 downto COUNTER_WIDTH);
+                                    data_mask_reg <= tdata(MASK_WIDTH + TIMESTAMP_WIDTH + COUNTER_WIDTH - 1 downto TIMESTAMP_WIDTH + COUNTER_WIDTH);
+                                    tlast_reg <= tlast;
+                                else
+                                    state_reg <= err;
+                                end if;
+                            end if;
+                        else
+                            state_reg <= run;
+                        end if;
+                         
                     when others => null;    
-                    
                 end case;                 
             end if;
         end if;
@@ -151,6 +145,9 @@ begin
     pulse <= pulse_reg;
     timestamp <= data_timestamp_reg;
     streamDown_tready <= tready_reg;
+    tdata <= streamDown_tdata;
+    tvalid <= streamDown_tvalid;
+    tlast <= streamDown_tlast;
     state <= "001" when state_reg = idle and resetn = '1' else
              "010" when state_reg = run and resetn = '1' else
              "100" when state_reg = err and resetn = '1' else
