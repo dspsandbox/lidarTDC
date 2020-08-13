@@ -133,6 +133,7 @@ if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
 xilinx.com:ip:axi_dma:7.1\
 xilinx.com:ip:axi_gpio:2.0\
+xilinx.com:ip:xlconcat:2.1\
 xilinx.com:ip:xlslice:1.0\
 xilinx.com:ip:smartconnect:1.0\
 xilinx.com:ip:processing_system7:5.5\
@@ -799,7 +800,7 @@ proc create_root_design { parentCell } {
    CONFIG.C_ALL_INPUTS {0} \
    CONFIG.C_ALL_INPUTS_2 {1} \
    CONFIG.C_ALL_OUTPUTS {1} \
-   CONFIG.C_GPIO2_WIDTH {3} \
+   CONFIG.C_GPIO2_WIDTH {27} \
    CONFIG.C_GPIO_WIDTH {26} \
    CONFIG.C_IS_DUAL {1} \
  ] $axi_gpio_0
@@ -832,6 +833,13 @@ proc create_root_design { parentCell } {
    CONFIG.COUNTER_WIDTH {24} \
    CONFIG.PORT_WIDTH {8} \
  ] $pulseStretcher_0
+
+  # Create instance: xlconcat_0, and set properties
+  set xlconcat_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0 ]
+  set_property -dict [ list \
+   CONFIG.IN0_WIDTH {3} \
+   CONFIG.IN1_WIDTH {24} \
+ ] $xlconcat_0
 
   # Create instance: xlslice_err, and set properties
   set xlslice_err [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_err ]
@@ -898,10 +906,12 @@ proc create_root_design { parentCell } {
   connect_bd_net -net axi_gpio_0_gpio_io_o [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_pulseWidth/Din] [get_bd_pins xlslice_resetn/Din] [get_bd_pins xlslice_trig/Din]
   connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins PS_interconnect/FCLK_CLK0] [get_bd_pins axi_dma_0/m_axi_mm2s_aclk] [get_bd_pins axi_dma_0/s_axi_lite_aclk] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins pulseGen_0/clk] [get_bd_pins pulseStretcher_0/clk]
   connect_bd_net -net pulseGen_0_pulse [get_bd_pins pulseGen_0/pulse] [get_bd_pins pulseStretcher_0/pulseIn]
-  connect_bd_net -net pulseGen_0_state [get_bd_pins axi_gpio_0/gpio2_io_i] [get_bd_pins pulseGen_0/state] [get_bd_pins xlslice_err/Din] [get_bd_pins xlslice_idle/Din] [get_bd_pins xlslice_run/Din]
+  connect_bd_net -net pulseGen_0_state [get_bd_pins pulseGen_0/state] [get_bd_pins xlconcat_0/In0] [get_bd_pins xlslice_err/Din] [get_bd_pins xlslice_idle/Din] [get_bd_pins xlslice_run/Din]
+  connect_bd_net -net pulseGen_0_streamDownCounter [get_bd_pins pulseGen_0/streamDownCounter] [get_bd_pins xlconcat_0/In1]
   connect_bd_net -net pulseGen_0_timestamp [get_bd_ports timestamp] [get_bd_pins pulseGen_0/timestamp]
   connect_bd_net -net pulseStretcher_0_pulseOut [get_bd_ports pulse] [get_bd_pins pulseStretcher_0/pulseOut]
   connect_bd_net -net rst_ps7_0_50M_peripheral_aresetn [get_bd_pins PS_interconnect/peripheral_aresetn] [get_bd_pins axi_dma_0/axi_resetn] [get_bd_pins axi_gpio_0/s_axi_aresetn]
+  connect_bd_net -net xlconcat_0_dout [get_bd_pins axi_gpio_0/gpio2_io_i] [get_bd_pins xlconcat_0/dout]
   connect_bd_net -net xlslice_0_Dout [get_bd_pins pulseStretcher_0/pulseWidth] [get_bd_pins xlslice_pulseWidth/Dout]
   connect_bd_net -net xlslice_0_Dout1 [get_bd_pins pulseGen_0/resetn] [get_bd_pins pulseStretcher_0/resetn] [get_bd_pins xlslice_resetn/Dout]
   connect_bd_net -net xlslice_err_Dout [get_bd_ports led0_r] [get_bd_pins xlslice_err/Dout]

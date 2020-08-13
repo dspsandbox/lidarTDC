@@ -30,8 +30,9 @@
       "xlslice_run": "",
       "xlslice_err": "",
       "axi_dma_0": "",
-      "pulseGen_0": "",
-      "pulseStretcher_0": ""
+      "pulseStretcher_0": "",
+      "xlconcat_0": "",
+      "pulseGen_0": ""
     },
     "interface_ports": {
       "DDR": {
@@ -160,7 +161,7 @@
             "value": "1"
           },
           "C_GPIO2_WIDTH": {
-            "value": "3"
+            "value": "27"
           },
           "C_GPIO_WIDTH": {
             "value": "26"
@@ -1572,28 +1573,28 @@
               }
             },
             "interface_nets": {
-              "ps7_0_axi_periph_to_s00_couplers": {
-                "interface_ports": [
-                  "S00_AXI",
-                  "s00_couplers/S_AXI"
-                ]
-              },
               "m00_couplers_to_ps7_0_axi_periph": {
                 "interface_ports": [
                   "M00_AXI",
                   "m00_couplers/M_AXI"
                 ]
               },
-              "s00_couplers_to_xbar": {
-                "interface_ports": [
-                  "s00_couplers/M_AXI",
-                  "xbar/S00_AXI"
-                ]
-              },
               "xbar_to_m00_couplers": {
                 "interface_ports": [
                   "xbar/M00_AXI",
                   "m00_couplers/S_AXI"
+                ]
+              },
+              "ps7_0_axi_periph_to_s00_couplers": {
+                "interface_ports": [
+                  "S00_AXI",
+                  "s00_couplers/S_AXI"
+                ]
+              },
+              "s00_couplers_to_xbar": {
+                "interface_ports": [
+                  "s00_couplers/M_AXI",
+                  "xbar/S00_AXI"
                 ]
               },
               "m01_couplers_to_ps7_0_axi_periph": {
@@ -1790,6 +1791,80 @@
           }
         }
       },
+      "pulseStretcher_0": {
+        "vlnv": "xilinx.com:module_ref:pulseStretcher:1.0",
+        "xci_name": "pulseGen_bd_pulseStretcher_0_0",
+        "parameters": {
+          "COUNTER_WIDTH": {
+            "value": "24"
+          },
+          "PORT_WIDTH": {
+            "value": "8"
+          }
+        },
+        "reference_info": {
+          "ref_type": "hdl",
+          "ref_name": "pulseStretcher",
+          "boundary_crc": "0x0"
+        },
+        "ports": {
+          "clk": {
+            "type": "clk",
+            "direction": "I",
+            "parameters": {
+              "ASSOCIATED_RESET": {
+                "value": "resetn",
+                "value_src": "constant"
+              },
+              "CLK_DOMAIN": {
+                "value": "pulseGen_bd_processing_system7_0_0_FCLK_CLK0",
+                "value_src": "default_prop"
+              },
+              "FREQ_HZ": {
+                "value": "100000000",
+                "value_src": "user_prop"
+              }
+            }
+          },
+          "resetn": {
+            "type": "rst",
+            "direction": "I",
+            "parameters": {
+              "POLARITY": {
+                "value": "ACTIVE_LOW",
+                "value_src": "constant"
+              }
+            }
+          },
+          "pulseWidth": {
+            "direction": "I",
+            "left": "23",
+            "right": "0"
+          },
+          "pulseIn": {
+            "direction": "I",
+            "left": "7",
+            "right": "0"
+          },
+          "pulseOut": {
+            "direction": "O",
+            "left": "7",
+            "right": "0"
+          }
+        }
+      },
+      "xlconcat_0": {
+        "vlnv": "xilinx.com:ip:xlconcat:2.1",
+        "xci_name": "pulseGen_bd_xlconcat_0_0",
+        "parameters": {
+          "IN0_WIDTH": {
+            "value": "3"
+          },
+          "IN1_WIDTH": {
+            "value": "24"
+          }
+        }
+      },
       "pulseGen_0": {
         "vlnv": "xilinx.com:module_ref:pulseGen:1.0",
         "xci_name": "pulseGen_bd_pulseGen_0_0",
@@ -1921,67 +1996,10 @@
             "direction": "O",
             "left": "2",
             "right": "0"
-          }
-        }
-      },
-      "pulseStretcher_0": {
-        "vlnv": "xilinx.com:module_ref:pulseStretcher:1.0",
-        "xci_name": "pulseGen_bd_pulseStretcher_0_0",
-        "parameters": {
-          "COUNTER_WIDTH": {
-            "value": "24"
           },
-          "PORT_WIDTH": {
-            "value": "8"
-          }
-        },
-        "reference_info": {
-          "ref_type": "hdl",
-          "ref_name": "pulseStretcher",
-          "boundary_crc": "0x0"
-        },
-        "ports": {
-          "clk": {
-            "type": "clk",
-            "direction": "I",
-            "parameters": {
-              "ASSOCIATED_RESET": {
-                "value": "resetn",
-                "value_src": "constant"
-              },
-              "CLK_DOMAIN": {
-                "value": "pulseGen_bd_processing_system7_0_0_FCLK_CLK0",
-                "value_src": "default_prop"
-              },
-              "FREQ_HZ": {
-                "value": "100000000",
-                "value_src": "user_prop"
-              }
-            }
-          },
-          "resetn": {
-            "type": "rst",
-            "direction": "I",
-            "parameters": {
-              "POLARITY": {
-                "value": "ACTIVE_LOW",
-                "value_src": "constant"
-              }
-            }
-          },
-          "pulseWidth": {
-            "direction": "I",
-            "left": "23",
-            "right": "0"
-          },
-          "pulseIn": {
-            "direction": "I",
-            "left": "7",
-            "right": "0"
-          },
-          "pulseOut": {
+          "streamDownCounter": {
             "direction": "O",
-            "left": "7",
+            "left": "23",
             "right": "0"
           }
         }
@@ -2032,8 +2050,8 @@
           "axi_gpio_0/s_axi_aclk",
           "axi_dma_0/m_axi_mm2s_aclk",
           "axi_dma_0/s_axi_lite_aclk",
-          "pulseGen_0/clk",
-          "pulseStretcher_0/clk"
+          "pulseStretcher_0/clk",
+          "pulseGen_0/clk"
         ]
       },
       "axi_gpio_0_gpio_io_o": {
@@ -2053,8 +2071,8 @@
       "xlslice_0_Dout1": {
         "ports": [
           "xlslice_resetn/Dout",
-          "pulseGen_0/resetn",
-          "pulseStretcher_0/resetn"
+          "pulseStretcher_0/resetn",
+          "pulseGen_0/resetn"
         ]
       },
       "xlslice_trig_Dout": {
@@ -2067,10 +2085,10 @@
       "pulseGen_0_state": {
         "ports": [
           "pulseGen_0/state",
-          "axi_gpio_0/gpio2_io_i",
           "xlslice_idle/Din",
           "xlslice_run/Din",
-          "xlslice_err/Din"
+          "xlslice_err/Din",
+          "xlconcat_0/In0"
         ]
       },
       "rst_ps7_0_50M_peripheral_aresetn": {
@@ -2114,6 +2132,18 @@
         "ports": [
           "pulseStretcher_0/pulseOut",
           "pulse"
+        ]
+      },
+      "pulseGen_0_streamDownCounter": {
+        "ports": [
+          "pulseGen_0/streamDownCounter",
+          "xlconcat_0/In1"
+        ]
+      },
+      "xlconcat_0_dout": {
+        "ports": [
+          "xlconcat_0/dout",
+          "axi_gpio_0/gpio2_io_i"
         ]
       }
     },

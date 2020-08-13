@@ -1,7 +1,7 @@
 --Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
---Date        : Thu Aug 13 10:25:18 2020
+--Date        : Thu Aug 13 11:09:53 2020
 --Host        : 5CD010B25T running 64-bit major release  (build 9200)
 --Command     : generate_target pulseGen_bd.bd
 --Design      : pulseGen_bd
@@ -1770,7 +1770,7 @@ entity pulseGen_bd is
     trig : out STD_LOGIC_VECTOR ( 0 to 0 )
   );
   attribute CORE_GENERATION_INFO : string;
-  attribute CORE_GENERATION_INFO of pulseGen_bd : entity is "pulseGen_bd,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=pulseGen_bd,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=20,numReposBlks=15,numNonXlnxBlks=0,numHierBlks=5,maxHierDepth=1,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=2,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=3,da_ps7_cnt=1,synth_mode=Global}";
+  attribute CORE_GENERATION_INFO of pulseGen_bd : entity is "pulseGen_bd,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=pulseGen_bd,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=21,numReposBlks=16,numNonXlnxBlks=0,numHierBlks=5,maxHierDepth=1,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=2,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=3,da_ps7_cnt=1,synth_mode=Global}";
   attribute HW_HANDOFF : string;
   attribute HW_HANDOFF of pulseGen_bd : entity is "pulseGen_bd.hwdef";
 end pulseGen_bd;
@@ -1798,7 +1798,7 @@ architecture STRUCTURE of pulseGen_bd is
     s_axi_rvalid : out STD_LOGIC;
     s_axi_rready : in STD_LOGIC;
     gpio_io_o : out STD_LOGIC_VECTOR ( 25 downto 0 );
-    gpio2_io_i : in STD_LOGIC_VECTOR ( 2 downto 0 )
+    gpio2_io_i : in STD_LOGIC_VECTOR ( 26 downto 0 )
   );
   end component pulseGen_bd_axi_gpio_0_0;
   component pulseGen_bd_xlslice_0_0 is
@@ -1880,6 +1880,22 @@ architecture STRUCTURE of pulseGen_bd is
     mm2s_introut : out STD_LOGIC
   );
   end component pulseGen_bd_axi_dma_0_0;
+  component pulseGen_bd_pulseStretcher_0_0 is
+  port (
+    clk : in STD_LOGIC;
+    resetn : in STD_LOGIC;
+    pulseWidth : in STD_LOGIC_VECTOR ( 23 downto 0 );
+    pulseIn : in STD_LOGIC_VECTOR ( 7 downto 0 );
+    pulseOut : out STD_LOGIC_VECTOR ( 7 downto 0 )
+  );
+  end component pulseGen_bd_pulseStretcher_0_0;
+  component pulseGen_bd_xlconcat_0_0 is
+  port (
+    In0 : in STD_LOGIC_VECTOR ( 2 downto 0 );
+    In1 : in STD_LOGIC_VECTOR ( 23 downto 0 );
+    dout : out STD_LOGIC_VECTOR ( 26 downto 0 )
+  );
+  end component pulseGen_bd_xlconcat_0_0;
   component pulseGen_bd_pulseGen_0_0 is
   port (
     clk : in STD_LOGIC;
@@ -1891,18 +1907,10 @@ architecture STRUCTURE of pulseGen_bd is
     streamDown_tvalid : in STD_LOGIC;
     streamDown_tlast : in STD_LOGIC;
     streamDown_tready : out STD_LOGIC;
-    state : out STD_LOGIC_VECTOR ( 2 downto 0 )
+    state : out STD_LOGIC_VECTOR ( 2 downto 0 );
+    streamDownCounter : out STD_LOGIC_VECTOR ( 23 downto 0 )
   );
   end component pulseGen_bd_pulseGen_0_0;
-  component pulseGen_bd_pulseStretcher_0_0 is
-  port (
-    clk : in STD_LOGIC;
-    resetn : in STD_LOGIC;
-    pulseWidth : in STD_LOGIC_VECTOR ( 23 downto 0 );
-    pulseIn : in STD_LOGIC_VECTOR ( 7 downto 0 );
-    pulseOut : out STD_LOGIC_VECTOR ( 7 downto 0 )
-  );
-  end component pulseGen_bd_pulseStretcher_0_0;
   signal PS_interconnect_M01_AXI_ARADDR : STD_LOGIC_VECTOR ( 31 downto 0 );
   signal PS_interconnect_M01_AXI_ARREADY : STD_LOGIC;
   signal PS_interconnect_M01_AXI_ARVALID : STD_LOGIC;
@@ -1978,9 +1986,11 @@ architecture STRUCTURE of pulseGen_bd is
   signal ps7_0_axi_periph_M00_AXI_WVALID : STD_LOGIC_VECTOR ( 0 to 0 );
   signal pulseGen_0_pulse : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal pulseGen_0_state : STD_LOGIC_VECTOR ( 2 downto 0 );
+  signal pulseGen_0_streamDownCounter : STD_LOGIC_VECTOR ( 23 downto 0 );
   signal pulseGen_0_timestamp : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal pulseStretcher_0_pulseOut : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal rst_ps7_0_50M_peripheral_aresetn : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal xlconcat_0_dout : STD_LOGIC_VECTOR ( 26 downto 0 );
   signal xlslice_0_Dout : STD_LOGIC_VECTOR ( 23 downto 0 );
   signal xlslice_0_Dout1 : STD_LOGIC_VECTOR ( 0 to 0 );
   signal xlslice_err_Dout : STD_LOGIC_VECTOR ( 0 to 0 );
@@ -2142,7 +2152,7 @@ axi_dma_0: component pulseGen_bd_axi_dma_0_0
     );
 axi_gpio_0: component pulseGen_bd_axi_gpio_0_0
      port map (
-      gpio2_io_i(2 downto 0) => pulseGen_0_state(2 downto 0),
+      gpio2_io_i(26 downto 0) => xlconcat_0_dout(26 downto 0),
       gpio_io_o(25 downto 0) => axi_gpio_0_gpio_io_o(25 downto 0),
       s_axi_aclk => processing_system7_0_FCLK_CLK0,
       s_axi_araddr(8 downto 0) => ps7_0_axi_periph_M00_AXI_ARADDR(8 downto 0),
@@ -2170,6 +2180,7 @@ pulseGen_0: component pulseGen_bd_pulseGen_0_0
       pulse(7 downto 0) => pulseGen_0_pulse(7 downto 0),
       resetn => xlslice_0_Dout1(0),
       state(2 downto 0) => pulseGen_0_state(2 downto 0),
+      streamDownCounter(23 downto 0) => pulseGen_0_streamDownCounter(23 downto 0),
       streamDown_tdata(63 downto 0) => axi_dma_0_M_AXIS_MM2S_TDATA(63 downto 0),
       streamDown_tlast => axi_dma_0_M_AXIS_MM2S_TLAST,
       streamDown_tready => axi_dma_0_M_AXIS_MM2S_TREADY,
@@ -2184,6 +2195,12 @@ pulseStretcher_0: component pulseGen_bd_pulseStretcher_0_0
       pulseOut(7 downto 0) => pulseStretcher_0_pulseOut(7 downto 0),
       pulseWidth(23 downto 0) => xlslice_0_Dout(23 downto 0),
       resetn => xlslice_0_Dout1(0)
+    );
+xlconcat_0: component pulseGen_bd_xlconcat_0_0
+     port map (
+      In0(2 downto 0) => pulseGen_0_state(2 downto 0),
+      In1(23 downto 0) => pulseGen_0_streamDownCounter(23 downto 0),
+      dout(26 downto 0) => xlconcat_0_dout(26 downto 0)
     );
 xlslice_err: component pulseGen_bd_xlslice_0_4
      port map (

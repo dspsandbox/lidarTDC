@@ -64,7 +64,8 @@ ENTITY pulseGen_bd_pulseGen_0_0 IS
     streamDown_tvalid : IN STD_LOGIC;
     streamDown_tlast : IN STD_LOGIC;
     streamDown_tready : OUT STD_LOGIC;
-    state : OUT STD_LOGIC_VECTOR(2 DOWNTO 0)
+    state : OUT STD_LOGIC_VECTOR(2 DOWNTO 0);
+    streamDownCounter : OUT STD_LOGIC_VECTOR(23 DOWNTO 0)
   );
 END pulseGen_bd_pulseGen_0_0;
 
@@ -88,7 +89,8 @@ ARCHITECTURE pulseGen_bd_pulseGen_0_0_arch OF pulseGen_bd_pulseGen_0_0 IS
       streamDown_tvalid : IN STD_LOGIC;
       streamDown_tlast : IN STD_LOGIC;
       streamDown_tready : OUT STD_LOGIC;
-      state : OUT STD_LOGIC_VECTOR(2 DOWNTO 0)
+      state : OUT STD_LOGIC_VECTOR(2 DOWNTO 0);
+      streamDownCounter : OUT STD_LOGIC_VECTOR(23 DOWNTO 0)
     );
   END COMPONENT pulseGen;
   ATTRIBUTE IP_DEFINITION_SOURCE : STRING;
@@ -122,6 +124,7 @@ BEGIN
       streamDown_tvalid => streamDown_tvalid,
       streamDown_tlast => streamDown_tlast,
       streamDown_tready => streamDown_tready,
-      state => state
+      state => state,
+      streamDownCounter => streamDownCounter
     );
 END pulseGen_bd_pulseGen_0_0_arch;

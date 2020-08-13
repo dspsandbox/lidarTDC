@@ -49,7 +49,8 @@ entity pulseGen is
            streamDown_tvalid : in STD_LOGIC;
            streamDown_tlast : in STD_LOGIC;
            streamDown_tready : out STD_LOGIC;
-           state : out std_logic_vector (2 downto 0));
+           state : out std_logic_vector (2 downto 0);
+           streamDownCounter : out STD_LOGIC_VECTOR(COUNTER_WIDTH - 1 downto 0));
 end pulseGen;
 
 architecture Behavioral of pulseGen is
@@ -67,6 +68,7 @@ architecture Behavioral of pulseGen is
     signal data_timestamp : std_logic_vector (TIMESTAMP_WIDTH -1 downto 0) := (others => '0');
     signal data_timestamp_reg : std_logic_vector (TIMESTAMP_WIDTH -1 downto 0) := (others => '0');
     signal data_mask_reg : std_logic_vector (MASK_WIDTH -1 downto 0) := (others => '0');
+    signal streamDownCounter_reg : unsigned (COUNTER_WIDTH - 1 downto 0) := (others => '0');
     
 
 begin
@@ -84,6 +86,7 @@ begin
                 data_counter_reg <= (others => '0');
                 data_timestamp_reg <= (others => '0');
                 data_mask_reg <= (others => '0');
+                streamDownCounter_reg <= (others => '0');
                 
             else
                trig_reg <= trig;
@@ -96,10 +99,11 @@ begin
                         tlast_reg <= '0';
                         data_counter_reg <= (others => '0');
                         data_timestamp_reg <= (others => '0');
-                        data_mask_reg <= (others => '0');         
+                        data_mask_reg <= (others => '0');  
                                           
                         if trig = '1' and trig_reg = '0' then
                             state_reg <= run;
+                            streamDownCounter_reg <= (others => '0');
                         else 
                             state_reg <= idle;
                         end if;
@@ -128,6 +132,7 @@ begin
                                     data_timestamp_reg <= tdata(TIMESTAMP_WIDTH + COUNTER_WIDTH - 1 downto COUNTER_WIDTH);
                                     data_mask_reg <= tdata(MASK_WIDTH + TIMESTAMP_WIDTH + COUNTER_WIDTH - 1 downto TIMESTAMP_WIDTH + COUNTER_WIDTH);
                                     tlast_reg <= tlast;
+                                    streamDownCounter_reg <= streamDownCounter_reg + 1 ;  
                                 else
                                     state_reg <= err;
                                 end if;
@@ -152,6 +157,6 @@ begin
              "010" when state_reg = run and resetn = '1' else
              "100" when state_reg = err and resetn = '1' else
              "000";
-
+    streamDownCounter <= std_logic_vector(streamDownCounter_reg);
 
 end Behavioral;
