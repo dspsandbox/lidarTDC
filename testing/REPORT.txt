@@ -1,0 +1,47 @@
+------------------------------------------
+RX/TX REPORT 2020-08-17 09:11:27.367890
+------------------------------------------
+GENERAL PARAMETERS:
+---> Iterations: 10000
+---> Channels: 8
+---> Correlation range: (0, 10)
+
+CHANNEL: 0
+---> Tx pulses: 5021014
+---> Rx pulses: 5021014
+---> Correlation: [0, 0, 65197, 4955817, 0, 0, 0, 0, 0, 0]
+
+CHANNEL: 1
+---> Tx pulses: 5019666
+---> Rx pulses: 5019666
+---> Correlation: [0, 0, 1135600, 3884066, 0, 0, 0, 0, 0, 0]
+
+CHANNEL: 2
+---> Tx pulses: 5019189
+---> Rx pulses: 5019189
+---> Correlation: [0, 0, 452078, 4567111, 0, 0, 0, 0, 0, 0]
+
+CHANNEL: 3
+---> Tx pulses: 5020880
+---> Rx pulses: 5020880
+---> Correlation: [0, 0, 1203591, 3817289, 0, 0, 0, 0, 0, 0]
+
+CHANNEL: 4
+---> Tx pulses: 5020111
+---> Rx pulses: 5020111
+---> Correlation: [0, 0, 568427, 4451684, 0, 0, 0, 0, 0, 0]
+
+CHANNEL: 5
+---> Tx pulses: 5018747
+---> Rx pulses: 5018747
+---> Correlation: [0, 0, 276749, 4741998, 0, 0, 0, 0, 0, 0]
+
+CHANNEL: 6
+---> Tx pulses: 5020409
+---> Rx pulses: 5020409
+---> Correlation: [0, 0, 3180136, 1840273, 0, 0, 0, 0, 0, 0]
+
+CHANNEL: 7
+---> Tx pulses: 5018993
+---> Rx pulses: 5018993
+---> Correlation: [0, 0, 2402741, 2616252, 0, 0, 0, 0, 0, 0]

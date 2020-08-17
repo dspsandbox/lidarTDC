@@ -40,7 +40,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# pulseGen, pulseStretcher
+# delay1Clk, pulseGen, pulseStretcher
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -133,6 +133,7 @@ if { $bCheckIPs == 1 } {
    set list_check_ips "\ 
 xilinx.com:ip:axi_dma:7.1\
 xilinx.com:ip:axi_gpio:2.0\
+xilinx.com:ip:clk_wiz:6.0\
 xilinx.com:ip:xlconcat:2.1\
 xilinx.com:ip:xlslice:1.0\
 xilinx.com:ip:smartconnect:1.0\
@@ -163,6 +164,7 @@ xilinx.com:ip:proc_sys_reset:5.0\
 set bCheckModules 1
 if { $bCheckModules == 1 } {
    set list_check_mods "\ 
+delay1Clk\
 pulseGen\
 pulseStretcher\
 "
@@ -235,8 +237,9 @@ proc create_hier_cell_PS_interconnect { parentCell nameHier } {
   create_bd_intf_pin -mode Slave -vlnv xilinx.com:interface:aximm_rtl:1.0 S00_AXI
 
   # Create pins
-  create_bd_pin -dir O -type clk FCLK_CLK0
+  create_bd_pin -dir O -type clk clk_100
   create_bd_pin -dir O -from 0 -to 0 -type rst peripheral_aresetn
+  create_bd_pin -dir O -from 0 -to 0 -type rst peripheral_reset
 
   # Create instance: axi_smc, and set properties
   set axi_smc [ create_bd_cell -type ip -vlnv xilinx.com:ip:smartconnect:1.0 axi_smc ]
@@ -726,9 +729,10 @@ proc create_hier_cell_PS_interconnect { parentCell nameHier } {
   connect_bd_intf_net -intf_net ps7_0_axi_periph_M00_AXI [get_bd_intf_pins M00_AXI] [get_bd_intf_pins ps7_0_axi_periph/M00_AXI]
 
   # Create port connections
-  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins FCLK_CLK0] [get_bd_pins axi_smc/aclk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK] [get_bd_pins ps7_0_axi_periph/ACLK] [get_bd_pins ps7_0_axi_periph/M00_ACLK] [get_bd_pins ps7_0_axi_periph/M01_ACLK] [get_bd_pins ps7_0_axi_periph/S00_ACLK] [get_bd_pins rst_ps7_0_50M/slowest_sync_clk]
+  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins clk_100] [get_bd_pins axi_smc/aclk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK] [get_bd_pins ps7_0_axi_periph/ACLK] [get_bd_pins ps7_0_axi_periph/M00_ACLK] [get_bd_pins ps7_0_axi_periph/M01_ACLK] [get_bd_pins ps7_0_axi_periph/S00_ACLK] [get_bd_pins rst_ps7_0_50M/slowest_sync_clk]
   connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins processing_system7_0/FCLK_RESET0_N] [get_bd_pins rst_ps7_0_50M/ext_reset_in]
   connect_bd_net -net rst_ps7_0_50M_peripheral_aresetn [get_bd_pins peripheral_aresetn] [get_bd_pins axi_smc/aresetn] [get_bd_pins ps7_0_axi_periph/ARESETN] [get_bd_pins ps7_0_axi_periph/M00_ARESETN] [get_bd_pins ps7_0_axi_periph/M01_ARESETN] [get_bd_pins ps7_0_axi_periph/S00_ARESETN] [get_bd_pins rst_ps7_0_50M/peripheral_aresetn]
+  connect_bd_net -net rst_ps7_0_50M_peripheral_reset [get_bd_pins peripheral_reset] [get_bd_pins rst_ps7_0_50M/peripheral_reset]
 
   # Restore current instance
   current_bd_instance $oldCurInst
@@ -772,6 +776,7 @@ proc create_root_design { parentCell } {
   set FIXED_IO [ create_bd_intf_port -mode Master -vlnv xilinx.com:display_processing_system7:fixedio_rtl:1.0 FIXED_IO ]
 
   # Create ports
+  set clk_10 [ create_bd_port -dir O -type clk clk_10 ]
   set led0_b [ create_bd_port -dir O -from 0 -to 0 led0_b ]
   set led0_g [ create_bd_port -dir O -from 0 -to 0 led0_g ]
   set led0_r [ create_bd_port -dir O -from 0 -to 0 led0_r ]
@@ -804,6 +809,33 @@ proc create_root_design { parentCell } {
    CONFIG.C_GPIO_WIDTH {26} \
    CONFIG.C_IS_DUAL {1} \
  ] $axi_gpio_0
+
+  # Create instance: clk_wiz_0, and set properties
+  set clk_wiz_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz:6.0 clk_wiz_0 ]
+  set_property -dict [ list \
+   CONFIG.CLKOUT1_JITTER {290.478} \
+   CONFIG.CLKOUT1_PHASE_ERROR {133.882} \
+   CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {10} \
+   CONFIG.CLKOUT1_USED {true} \
+   CONFIG.CLK_OUT1_PORT {clk_10} \
+   CONFIG.MMCM_CLKFBOUT_MULT_F {15.625} \
+   CONFIG.MMCM_CLKOUT0_DIVIDE_F {78.125} \
+   CONFIG.MMCM_DIVCLK_DIVIDE {2} \
+ ] $clk_wiz_0
+
+  # Create instance: delay1Clk_0, and set properties
+  set block_name delay1Clk
+  set block_cell_name delay1Clk_0
+  if { [catch {set delay1Clk_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_msg_id "BD_TCL-105" "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $delay1Clk_0 eq "" } {
+     catch {common::send_msg_id "BD_TCL-106" "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+    set_property -dict [ list \
+   CONFIG.PORT_WIDTH {8} \
+ ] $delay1Clk_0
 
   # Create instance: pulseGen_0, and set properties
   set block_name pulseGen
@@ -903,17 +935,20 @@ proc create_root_design { parentCell } {
   connect_bd_intf_net -intf_net ps7_0_axi_periph_M00_AXI [get_bd_intf_pins PS_interconnect/M00_AXI] [get_bd_intf_pins axi_gpio_0/S_AXI]
 
   # Create port connections
+  connect_bd_net -net PS_interconnect_peripheral_reset [get_bd_pins PS_interconnect/peripheral_reset] [get_bd_pins clk_wiz_0/reset]
   connect_bd_net -net axi_gpio_0_gpio_io_o [get_bd_pins axi_gpio_0/gpio_io_o] [get_bd_pins xlslice_pulseWidth/Din] [get_bd_pins xlslice_resetn/Din] [get_bd_pins xlslice_trig/Din]
-  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins PS_interconnect/FCLK_CLK0] [get_bd_pins axi_dma_0/m_axi_mm2s_aclk] [get_bd_pins axi_dma_0/s_axi_lite_aclk] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins pulseGen_0/clk] [get_bd_pins pulseStretcher_0/clk]
+  connect_bd_net -net clk_wiz_0_clk_10 [get_bd_ports clk_10] [get_bd_pins clk_wiz_0/clk_10]
+  connect_bd_net -net delay1Clk_0_dataOut [get_bd_ports timestamp] [get_bd_pins delay1Clk_0/dataOut]
+  connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins PS_interconnect/clk_100] [get_bd_pins axi_dma_0/m_axi_mm2s_aclk] [get_bd_pins axi_dma_0/s_axi_lite_aclk] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins clk_wiz_0/clk_in1] [get_bd_pins delay1Clk_0/clk] [get_bd_pins pulseGen_0/clk] [get_bd_pins pulseStretcher_0/clk]
   connect_bd_net -net pulseGen_0_pulse [get_bd_pins pulseGen_0/pulse] [get_bd_pins pulseStretcher_0/pulseIn]
   connect_bd_net -net pulseGen_0_state [get_bd_pins pulseGen_0/state] [get_bd_pins xlconcat_0/In0] [get_bd_pins xlslice_err/Din] [get_bd_pins xlslice_idle/Din] [get_bd_pins xlslice_run/Din]
   connect_bd_net -net pulseGen_0_streamDownCounter [get_bd_pins pulseGen_0/streamDownCounter] [get_bd_pins xlconcat_0/In1]
-  connect_bd_net -net pulseGen_0_timestamp [get_bd_ports timestamp] [get_bd_pins pulseGen_0/timestamp]
+  connect_bd_net -net pulseGen_0_timestamp [get_bd_pins delay1Clk_0/dataIn] [get_bd_pins pulseGen_0/timestamp]
   connect_bd_net -net pulseStretcher_0_pulseOut [get_bd_ports pulse] [get_bd_pins pulseStretcher_0/pulseOut]
   connect_bd_net -net rst_ps7_0_50M_peripheral_aresetn [get_bd_pins PS_interconnect/peripheral_aresetn] [get_bd_pins axi_dma_0/axi_resetn] [get_bd_pins axi_gpio_0/s_axi_aresetn]
   connect_bd_net -net xlconcat_0_dout [get_bd_pins axi_gpio_0/gpio2_io_i] [get_bd_pins xlconcat_0/dout]
   connect_bd_net -net xlslice_0_Dout [get_bd_pins pulseStretcher_0/pulseWidth] [get_bd_pins xlslice_pulseWidth/Dout]
-  connect_bd_net -net xlslice_0_Dout1 [get_bd_pins pulseGen_0/resetn] [get_bd_pins pulseStretcher_0/resetn] [get_bd_pins xlslice_resetn/Dout]
+  connect_bd_net -net xlslice_0_Dout1 [get_bd_pins delay1Clk_0/resetn] [get_bd_pins pulseGen_0/resetn] [get_bd_pins pulseStretcher_0/resetn] [get_bd_pins xlslice_resetn/Dout]
   connect_bd_net -net xlslice_err_Dout [get_bd_ports led0_r] [get_bd_pins xlslice_err/Dout]
   connect_bd_net -net xlslice_idle_Dout [get_bd_ports led0_g] [get_bd_pins xlslice_idle/Dout]
   connect_bd_net -net xlslice_run_Dout [get_bd_ports led0_b] [get_bd_pins xlslice_run/Dout]

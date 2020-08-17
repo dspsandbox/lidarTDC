@@ -1,7 +1,7 @@
 --Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
---Date        : Thu Aug 13 13:44:04 2020
+--Date        : Sun Aug 16 21:06:39 2020
 --Host        : 5CD010B25T running 64-bit major release  (build 9200)
 --Command     : generate_target pulseGen_bd_wrapper.bd
 --Design      : pulseGen_bd_wrapper
@@ -34,6 +34,7 @@ entity pulseGen_bd_wrapper is
     FIXED_IO_ps_clk : inout STD_LOGIC;
     FIXED_IO_ps_porb : inout STD_LOGIC;
     FIXED_IO_ps_srstb : inout STD_LOGIC;
+    clk_10 : out STD_LOGIC;
     led0_b : out STD_LOGIC_VECTOR ( 0 to 0 );
     led0_g : out STD_LOGIC_VECTOR ( 0 to 0 );
     led0_r : out STD_LOGIC_VECTOR ( 0 to 0 );
@@ -52,6 +53,7 @@ architecture STRUCTURE of pulseGen_bd_wrapper is
     pulse : out STD_LOGIC_VECTOR ( 7 downto 0 );
     timestamp : out STD_LOGIC_VECTOR ( 7 downto 0 );
     trig : out STD_LOGIC_VECTOR ( 0 to 0 );
+    clk_10 : out STD_LOGIC;
     DDR_cas_n : inout STD_LOGIC;
     DDR_cke : inout STD_LOGIC;
     DDR_ck_n : inout STD_LOGIC;
@@ -99,6 +101,7 @@ pulseGen_bd_i: component pulseGen_bd
       FIXED_IO_ps_clk => FIXED_IO_ps_clk,
       FIXED_IO_ps_porb => FIXED_IO_ps_porb,
       FIXED_IO_ps_srstb => FIXED_IO_ps_srstb,
+      clk_10 => clk_10,
       led0_b(0) => led0_b(0),
       led0_g(0) => led0_g(0),
       led0_r(0) => led0_r(0),

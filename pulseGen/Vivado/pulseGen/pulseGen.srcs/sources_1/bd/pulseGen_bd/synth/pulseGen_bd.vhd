@@ -1,7 +1,7 @@
 --Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
---Date        : Thu Aug 13 13:44:03 2020
+--Date        : Sun Aug 16 21:06:39 2020
 --Host        : 5CD010B25T running 64-bit major release  (build 9200)
 --Command     : generate_target pulseGen_bd.bd
 --Design      : pulseGen_bd
@@ -1081,7 +1081,6 @@ entity PS_interconnect_imp_L4020S is
     DDR_ras_n : inout STD_LOGIC;
     DDR_reset_n : inout STD_LOGIC;
     DDR_we_n : inout STD_LOGIC;
-    FCLK_CLK0 : out STD_LOGIC;
     FIXED_IO_ddr_vrn : inout STD_LOGIC;
     FIXED_IO_ddr_vrp : inout STD_LOGIC;
     FIXED_IO_mio : inout STD_LOGIC_VECTOR ( 53 downto 0 );
@@ -1134,7 +1133,9 @@ entity PS_interconnect_imp_L4020S is
     S00_AXI_rready : in STD_LOGIC;
     S00_AXI_rresp : out STD_LOGIC_VECTOR ( 1 downto 0 );
     S00_AXI_rvalid : out STD_LOGIC;
-    peripheral_aresetn : out STD_LOGIC_VECTOR ( 0 to 0 )
+    clk_100 : out STD_LOGIC;
+    peripheral_aresetn : out STD_LOGIC_VECTOR ( 0 to 0 );
+    peripheral_reset : out STD_LOGIC_VECTOR ( 0 to 0 )
   );
 end PS_interconnect_imp_L4020S;
 
@@ -1426,6 +1427,7 @@ architecture STRUCTURE of PS_interconnect_imp_L4020S is
   signal ps7_0_axi_periph_M00_AXI_WSTRB : STD_LOGIC_VECTOR ( 3 downto 0 );
   signal ps7_0_axi_periph_M00_AXI_WVALID : STD_LOGIC_VECTOR ( 0 to 0 );
   signal rst_ps7_0_50M_peripheral_aresetn : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal rst_ps7_0_50M_peripheral_reset : STD_LOGIC_VECTOR ( 0 to 0 );
   signal NLW_processing_system7_0_S_AXI_HP0_AWREADY_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_S_AXI_HP0_BVALID_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_S_AXI_HP0_WREADY_UNCONNECTED : STD_LOGIC;
@@ -1441,7 +1443,6 @@ architecture STRUCTURE of PS_interconnect_imp_L4020S is
   signal NLW_rst_ps7_0_50M_mb_reset_UNCONNECTED : STD_LOGIC;
   signal NLW_rst_ps7_0_50M_bus_struct_reset_UNCONNECTED : STD_LOGIC_VECTOR ( 0 to 0 );
   signal NLW_rst_ps7_0_50M_interconnect_aresetn_UNCONNECTED : STD_LOGIC_VECTOR ( 0 to 0 );
-  signal NLW_rst_ps7_0_50M_peripheral_reset_UNCONNECTED : STD_LOGIC_VECTOR ( 0 to 0 );
 begin
   Conn1_ARADDR(31 downto 0) <= S00_AXI_araddr(31 downto 0);
   Conn1_ARBURST(1 downto 0) <= S00_AXI_arburst(1 downto 0);
@@ -1459,7 +1460,6 @@ begin
   Conn2_RRESP(1 downto 0) <= M01_AXI_rresp(1 downto 0);
   Conn2_RVALID <= M01_AXI_rvalid;
   Conn2_WREADY <= M01_AXI_wready;
-  FCLK_CLK0 <= processing_system7_0_FCLK_CLK0;
   M00_AXI_araddr(31 downto 0) <= ps7_0_axi_periph_M00_AXI_ARADDR(31 downto 0);
   M00_AXI_arvalid(0) <= ps7_0_axi_periph_M00_AXI_ARVALID(0);
   M00_AXI_awaddr(31 downto 0) <= ps7_0_axi_periph_M00_AXI_AWADDR(31 downto 0);
@@ -1482,7 +1482,9 @@ begin
   S00_AXI_rlast <= Conn1_RLAST;
   S00_AXI_rresp(1 downto 0) <= Conn1_RRESP(1 downto 0);
   S00_AXI_rvalid <= Conn1_RVALID;
+  clk_100 <= processing_system7_0_FCLK_CLK0;
   peripheral_aresetn(0) <= rst_ps7_0_50M_peripheral_aresetn(0);
+  peripheral_reset(0) <= rst_ps7_0_50M_peripheral_reset(0);
   ps7_0_axi_periph_M00_AXI_ARREADY(0) <= M00_AXI_arready(0);
   ps7_0_axi_periph_M00_AXI_AWREADY(0) <= M00_AXI_awready(0);
   ps7_0_axi_periph_M00_AXI_BRESP(1 downto 0) <= M00_AXI_bresp(1 downto 0);
@@ -1731,7 +1733,7 @@ rst_ps7_0_50M: component pulseGen_bd_rst_ps7_0_50M_0
       mb_debug_sys_rst => '0',
       mb_reset => NLW_rst_ps7_0_50M_mb_reset_UNCONNECTED,
       peripheral_aresetn(0) => rst_ps7_0_50M_peripheral_aresetn(0),
-      peripheral_reset(0) => NLW_rst_ps7_0_50M_peripheral_reset_UNCONNECTED(0),
+      peripheral_reset(0) => rst_ps7_0_50M_peripheral_reset(0),
       slowest_sync_clk => processing_system7_0_FCLK_CLK0
     );
 end STRUCTURE;
@@ -1762,6 +1764,7 @@ entity pulseGen_bd is
     FIXED_IO_ps_clk : inout STD_LOGIC;
     FIXED_IO_ps_porb : inout STD_LOGIC;
     FIXED_IO_ps_srstb : inout STD_LOGIC;
+    clk_10 : out STD_LOGIC;
     led0_b : out STD_LOGIC_VECTOR ( 0 to 0 );
     led0_g : out STD_LOGIC_VECTOR ( 0 to 0 );
     led0_r : out STD_LOGIC_VECTOR ( 0 to 0 );
@@ -1770,7 +1773,7 @@ entity pulseGen_bd is
     trig : out STD_LOGIC_VECTOR ( 0 to 0 )
   );
   attribute CORE_GENERATION_INFO : string;
-  attribute CORE_GENERATION_INFO of pulseGen_bd : entity is "pulseGen_bd,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=pulseGen_bd,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=21,numReposBlks=16,numNonXlnxBlks=0,numHierBlks=5,maxHierDepth=1,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=2,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=3,da_ps7_cnt=1,synth_mode=Global}";
+  attribute CORE_GENERATION_INFO of pulseGen_bd : entity is "pulseGen_bd,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=pulseGen_bd,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=23,numReposBlks=18,numNonXlnxBlks=0,numHierBlks=5,maxHierDepth=1,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=3,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=3,da_ps7_cnt=1,synth_mode=Global}";
   attribute HW_HANDOFF : string;
   attribute HW_HANDOFF of pulseGen_bd : entity is "pulseGen_bd.hwdef";
 end pulseGen_bd;
@@ -1911,6 +1914,22 @@ architecture STRUCTURE of pulseGen_bd is
     streamDownCounter : out STD_LOGIC_VECTOR ( 23 downto 0 )
   );
   end component pulseGen_bd_pulseGen_0_0;
+  component pulseGen_bd_clk_wiz_0_0 is
+  port (
+    reset : in STD_LOGIC;
+    clk_in1 : in STD_LOGIC;
+    clk_10 : out STD_LOGIC;
+    locked : out STD_LOGIC
+  );
+  end component pulseGen_bd_clk_wiz_0_0;
+  component pulseGen_bd_delay1Clk_0_0 is
+  port (
+    clk : in STD_LOGIC;
+    resetn : in STD_LOGIC;
+    dataIn : in STD_LOGIC_VECTOR ( 7 downto 0 );
+    dataOut : out STD_LOGIC_VECTOR ( 7 downto 0 )
+  );
+  end component pulseGen_bd_delay1Clk_0_0;
   signal PS_interconnect_M01_AXI_ARADDR : STD_LOGIC_VECTOR ( 31 downto 0 );
   signal PS_interconnect_M01_AXI_ARREADY : STD_LOGIC;
   signal PS_interconnect_M01_AXI_ARVALID : STD_LOGIC;
@@ -1927,6 +1946,7 @@ architecture STRUCTURE of pulseGen_bd is
   signal PS_interconnect_M01_AXI_WDATA : STD_LOGIC_VECTOR ( 31 downto 0 );
   signal PS_interconnect_M01_AXI_WREADY : STD_LOGIC;
   signal PS_interconnect_M01_AXI_WVALID : STD_LOGIC;
+  signal PS_interconnect_peripheral_reset : STD_LOGIC_VECTOR ( 0 to 0 );
   signal axi_dma_0_M_AXIS_MM2S_TDATA : STD_LOGIC_VECTOR ( 63 downto 0 );
   signal axi_dma_0_M_AXIS_MM2S_TLAST : STD_LOGIC;
   signal axi_dma_0_M_AXIS_MM2S_TREADY : STD_LOGIC;
@@ -1945,6 +1965,8 @@ architecture STRUCTURE of pulseGen_bd is
   signal axi_dma_0_M_AXI_MM2S_RRESP : STD_LOGIC_VECTOR ( 1 downto 0 );
   signal axi_dma_0_M_AXI_MM2S_RVALID : STD_LOGIC;
   signal axi_gpio_0_gpio_io_o : STD_LOGIC_VECTOR ( 25 downto 0 );
+  signal clk_wiz_0_clk_10 : STD_LOGIC;
+  signal delay1Clk_0_dataOut : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal processing_system7_0_DDR_ADDR : STD_LOGIC_VECTOR ( 14 downto 0 );
   signal processing_system7_0_DDR_BA : STD_LOGIC_VECTOR ( 2 downto 0 );
   signal processing_system7_0_DDR_CAS_N : STD_LOGIC;
@@ -2000,6 +2022,7 @@ architecture STRUCTURE of pulseGen_bd is
   signal NLW_axi_dma_0_mm2s_introut_UNCONNECTED : STD_LOGIC;
   signal NLW_axi_dma_0_mm2s_prmry_reset_out_n_UNCONNECTED : STD_LOGIC;
   signal NLW_axi_dma_0_m_axis_mm2s_tkeep_UNCONNECTED : STD_LOGIC_VECTOR ( 7 downto 0 );
+  signal NLW_clk_wiz_0_locked_UNCONNECTED : STD_LOGIC;
   attribute X_INTERFACE_INFO : string;
   attribute X_INTERFACE_INFO of DDR_cas_n : signal is "xilinx.com:interface:ddrx:1.0 DDR CAS_N";
   attribute X_INTERFACE_INFO of DDR_ck_n : signal is "xilinx.com:interface:ddrx:1.0 DDR CK_N";
@@ -2017,6 +2040,8 @@ architecture STRUCTURE of pulseGen_bd is
   attribute X_INTERFACE_INFO of FIXED_IO_ps_clk : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO PS_CLK";
   attribute X_INTERFACE_INFO of FIXED_IO_ps_porb : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO PS_PORB";
   attribute X_INTERFACE_INFO of FIXED_IO_ps_srstb : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO PS_SRSTB";
+  attribute X_INTERFACE_INFO of clk_10 : signal is "xilinx.com:signal:clock:1.0 CLK.CLK_10 CLK";
+  attribute X_INTERFACE_PARAMETER of clk_10 : signal is "XIL_INTERFACENAME CLK.CLK_10, CLK_DOMAIN /clk_wiz_0_clk_out1, FREQ_HZ 10000000, INSERT_VIP 0, PHASE 0.0";
   attribute X_INTERFACE_INFO of DDR_addr : signal is "xilinx.com:interface:ddrx:1.0 DDR ADDR";
   attribute X_INTERFACE_PARAMETER of DDR_addr : signal is "XIL_INTERFACENAME DDR, AXI_ARBITRATION_SCHEME TDM, BURST_LENGTH 8, CAN_DEBUG false, CAS_LATENCY 11, CAS_WRITE_LATENCY 11, CS_ENABLED true, DATA_MASK_ENABLED true, DATA_WIDTH 8, MEMORY_TYPE COMPONENTS, MEM_ADDR_MAP ROW_COLUMN_BANK, SLOT Single, TIMEPERIOD_PS 1250";
   attribute X_INTERFACE_INFO of DDR_ba : signal is "xilinx.com:interface:ddrx:1.0 DDR BA";
@@ -2030,11 +2055,12 @@ architecture STRUCTURE of pulseGen_bd is
   attribute X_INTERFACE_INFO of timestamp : signal is "xilinx.com:signal:data:1.0 DATA.TIMESTAMP DATA";
   attribute X_INTERFACE_PARAMETER of timestamp : signal is "XIL_INTERFACENAME DATA.TIMESTAMP, LAYERED_METADATA undef";
 begin
+  clk_10 <= clk_wiz_0_clk_10;
   led0_b(0) <= xlslice_run_Dout(0);
   led0_g(0) <= xlslice_idle_Dout(0);
   led0_r(0) <= xlslice_err_Dout(0);
   pulse(7 downto 0) <= pulseStretcher_0_pulseOut(7 downto 0);
-  timestamp(7 downto 0) <= pulseGen_0_timestamp(7 downto 0);
+  timestamp(7 downto 0) <= delay1Clk_0_dataOut(7 downto 0);
   trig(0) <= xlslice_trig_Dout(0);
 PS_interconnect: entity work.PS_interconnect_imp_L4020S
      port map (
@@ -2053,7 +2079,6 @@ PS_interconnect: entity work.PS_interconnect_imp_L4020S
       DDR_ras_n => DDR_ras_n,
       DDR_reset_n => DDR_reset_n,
       DDR_we_n => DDR_we_n,
-      FCLK_CLK0 => processing_system7_0_FCLK_CLK0,
       FIXED_IO_ddr_vrn => FIXED_IO_ddr_vrn,
       FIXED_IO_ddr_vrp => FIXED_IO_ddr_vrp,
       FIXED_IO_mio(53 downto 0) => FIXED_IO_mio(53 downto 0),
@@ -2106,7 +2131,9 @@ PS_interconnect: entity work.PS_interconnect_imp_L4020S
       S00_AXI_rready => axi_dma_0_M_AXI_MM2S_RREADY,
       S00_AXI_rresp(1 downto 0) => axi_dma_0_M_AXI_MM2S_RRESP(1 downto 0),
       S00_AXI_rvalid => axi_dma_0_M_AXI_MM2S_RVALID,
-      peripheral_aresetn(0) => rst_ps7_0_50M_peripheral_aresetn(0)
+      clk_100 => processing_system7_0_FCLK_CLK0,
+      peripheral_aresetn(0) => rst_ps7_0_50M_peripheral_aresetn(0),
+      peripheral_reset(0) => PS_interconnect_peripheral_reset(0)
     );
 axi_dma_0: component pulseGen_bd_axi_dma_0_0
      port map (
@@ -2173,6 +2200,20 @@ axi_gpio_0: component pulseGen_bd_axi_gpio_0_0
       s_axi_wready => ps7_0_axi_periph_M00_AXI_WREADY,
       s_axi_wstrb(3 downto 0) => ps7_0_axi_periph_M00_AXI_WSTRB(3 downto 0),
       s_axi_wvalid => ps7_0_axi_periph_M00_AXI_WVALID(0)
+    );
+clk_wiz_0: component pulseGen_bd_clk_wiz_0_0
+     port map (
+      clk_10 => clk_wiz_0_clk_10,
+      clk_in1 => processing_system7_0_FCLK_CLK0,
+      locked => NLW_clk_wiz_0_locked_UNCONNECTED,
+      reset => PS_interconnect_peripheral_reset(0)
+    );
+delay1Clk_0: component pulseGen_bd_delay1Clk_0_0
+     port map (
+      clk => processing_system7_0_FCLK_CLK0,
+      dataIn(7 downto 0) => pulseGen_0_timestamp(7 downto 0),
+      dataOut(7 downto 0) => delay1Clk_0_dataOut(7 downto 0),
+      resetn => xlslice_0_Dout1(0)
     );
 pulseGen_0: component pulseGen_bd_pulseGen_0_0
      port map (

@@ -1,7 +1,7 @@
 --Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
---Date        : Thu Aug 13 15:30:08 2020
+--Date        : Mon Aug 17 08:16:29 2020
 --Host        : 5CD010B25T running 64-bit major release  (build 9200)
 --Command     : generate_target pulseAcq_bd.bd
 --Design      : pulseAcq_bd
@@ -1081,7 +1081,6 @@ entity PS_interconnect_imp_8690ZS is
     DDR_ras_n : inout STD_LOGIC;
     DDR_reset_n : inout STD_LOGIC;
     DDR_we_n : inout STD_LOGIC;
-    FCLK_CLK0 : out STD_LOGIC;
     FIXED_IO_ddr_vrn : inout STD_LOGIC;
     FIXED_IO_ddr_vrp : inout STD_LOGIC;
     FIXED_IO_mio : inout STD_LOGIC_VECTOR ( 53 downto 0 );
@@ -1137,6 +1136,8 @@ entity PS_interconnect_imp_8690ZS is
     S00_AXI_wready : out STD_LOGIC;
     S00_AXI_wstrb : in STD_LOGIC_VECTOR ( 7 downto 0 );
     S00_AXI_wvalid : in STD_LOGIC;
+    clk_100 : in STD_LOGIC;
+    ext_reset_in : in STD_LOGIC;
     peripheral_aresetn : out STD_LOGIC_VECTOR ( 0 to 0 )
   );
 end PS_interconnect_imp_8690ZS;
@@ -1362,6 +1363,7 @@ architecture STRUCTURE of PS_interconnect_imp_8690ZS is
   signal axi_smc_M00_AXI_WREADY : STD_LOGIC;
   signal axi_smc_M00_AXI_WSTRB : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal axi_smc_M00_AXI_WVALID : STD_LOGIC;
+  signal ext_reset_in_1 : STD_LOGIC;
   signal processing_system7_0_DDR_ADDR : STD_LOGIC_VECTOR ( 14 downto 0 );
   signal processing_system7_0_DDR_BA : STD_LOGIC_VECTOR ( 2 downto 0 );
   signal processing_system7_0_DDR_CAS_N : STD_LOGIC;
@@ -1378,7 +1380,6 @@ architecture STRUCTURE of PS_interconnect_imp_8690ZS is
   signal processing_system7_0_DDR_RESET_N : STD_LOGIC;
   signal processing_system7_0_DDR_WE_N : STD_LOGIC;
   signal processing_system7_0_FCLK_CLK0 : STD_LOGIC;
-  signal processing_system7_0_FCLK_RESET0_N : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_DDR_VRN : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_DDR_VRP : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_MIO : STD_LOGIC_VECTOR ( 53 downto 0 );
@@ -1441,6 +1442,8 @@ architecture STRUCTURE of PS_interconnect_imp_8690ZS is
   signal ps7_0_axi_periph_M00_AXI_WSTRB : STD_LOGIC_VECTOR ( 3 downto 0 );
   signal ps7_0_axi_periph_M00_AXI_WVALID : STD_LOGIC;
   signal rst_ps7_0_50M_peripheral_aresetn : STD_LOGIC_VECTOR ( 0 to 0 );
+  signal NLW_processing_system7_0_FCLK_CLK0_UNCONNECTED : STD_LOGIC;
+  signal NLW_processing_system7_0_FCLK_RESET0_N_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_S_AXI_HP0_ARREADY_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_S_AXI_HP0_RLAST_UNCONNECTED : STD_LOGIC;
   signal NLW_processing_system7_0_S_AXI_HP0_RVALID_UNCONNECTED : STD_LOGIC;
@@ -1467,7 +1470,6 @@ begin
   Conn2_RRESP(1 downto 0) <= M01_AXI_rresp(1 downto 0);
   Conn2_RVALID <= M01_AXI_rvalid;
   Conn2_WREADY <= M01_AXI_wready;
-  FCLK_CLK0 <= processing_system7_0_FCLK_CLK0;
   M00_AXI_araddr(31 downto 0) <= ps7_0_axi_periph_M00_AXI_ARADDR(31 downto 0);
   M00_AXI_arvalid <= ps7_0_axi_periph_M00_AXI_ARVALID;
   M00_AXI_awaddr(31 downto 0) <= ps7_0_axi_periph_M00_AXI_AWADDR(31 downto 0);
@@ -1501,7 +1503,9 @@ begin
   S01_AXI_1_WLAST <= S00_AXI_wlast;
   S01_AXI_1_WSTRB(7 downto 0) <= S00_AXI_wstrb(7 downto 0);
   S01_AXI_1_WVALID <= S00_AXI_wvalid;
+  ext_reset_in_1 <= ext_reset_in;
   peripheral_aresetn(0) <= rst_ps7_0_50M_peripheral_aresetn(0);
+  processing_system7_0_FCLK_CLK0 <= clk_100;
   ps7_0_axi_periph_M00_AXI_ARREADY <= M00_AXI_arready;
   ps7_0_axi_periph_M00_AXI_AWREADY <= M00_AXI_awready;
   ps7_0_axi_periph_M00_AXI_BRESP(1 downto 0) <= M00_AXI_bresp(1 downto 0);
@@ -1570,8 +1574,8 @@ processing_system7_0: component pulseAcq_bd_processing_system7_0_0
       DDR_VRN => FIXED_IO_ddr_vrn,
       DDR_VRP => FIXED_IO_ddr_vrp,
       DDR_WEB => DDR_we_n,
-      FCLK_CLK0 => processing_system7_0_FCLK_CLK0,
-      FCLK_RESET0_N => processing_system7_0_FCLK_RESET0_N,
+      FCLK_CLK0 => NLW_processing_system7_0_FCLK_CLK0_UNCONNECTED,
+      FCLK_RESET0_N => NLW_processing_system7_0_FCLK_RESET0_N_UNCONNECTED,
       MIO(53 downto 0) => FIXED_IO_mio(53 downto 0),
       M_AXI_GP0_ACLK => processing_system7_0_FCLK_CLK0,
       M_AXI_GP0_ARADDR(31 downto 0) => processing_system7_0_M_AXI_GP0_ARADDR(31 downto 0),
@@ -1751,7 +1755,7 @@ rst_ps7_0_50M: component pulseAcq_bd_rst_ps7_0_50M_0
       aux_reset_in => '1',
       bus_struct_reset(0) => NLW_rst_ps7_0_50M_bus_struct_reset_UNCONNECTED(0),
       dcm_locked => '1',
-      ext_reset_in => processing_system7_0_FCLK_RESET0_N,
+      ext_reset_in => ext_reset_in_1,
       interconnect_aresetn(0) => NLW_rst_ps7_0_50M_interconnect_aresetn_UNCONNECTED(0),
       mb_debug_sys_rst => '0',
       mb_reset => NLW_rst_ps7_0_50M_mb_reset_UNCONNECTED,
@@ -1787,6 +1791,7 @@ entity pulseAcq_bd is
     FIXED_IO_ps_clk : inout STD_LOGIC;
     FIXED_IO_ps_porb : inout STD_LOGIC;
     FIXED_IO_ps_srstb : inout STD_LOGIC;
+    clk_10 : in STD_LOGIC;
     led0_b : out STD_LOGIC_VECTOR ( 0 to 0 );
     led0_g : out STD_LOGIC_VECTOR ( 0 to 0 );
     led0_r : out STD_LOGIC_VECTOR ( 0 to 0 );
@@ -1795,7 +1800,7 @@ entity pulseAcq_bd is
     trig : in STD_LOGIC
   );
   attribute CORE_GENERATION_INFO : string;
-  attribute CORE_GENERATION_INFO of pulseAcq_bd : entity is "pulseAcq_bd,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=pulseAcq_bd,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=19,numReposBlks=14,numNonXlnxBlks=0,numHierBlks=5,maxHierDepth=1,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=1,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=1,synth_mode=Global}";
+  attribute CORE_GENERATION_INFO of pulseAcq_bd : entity is "pulseAcq_bd,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=pulseAcq_bd,x_ipVersion=1.00.a,x_ipLanguage=VHDL,numBlks=23,numReposBlks=18,numNonXlnxBlks=0,numHierBlks=5,maxHierDepth=1,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=4,numPkgbdBlks=0,bdsource=USER,da_axi4_cnt=1,synth_mode=Global}";
   attribute HW_HANDOFF : string;
   attribute HW_HANDOFF of pulseAcq_bd : entity is "pulseAcq_bd.hwdef";
 end pulseAcq_bd;
@@ -1925,6 +1930,37 @@ architecture STRUCTURE of pulseAcq_bd is
     streamUpCounter : out STD_LOGIC_VECTOR ( 23 downto 0 )
   );
   end component pulseAcq_bd_pulseAcq_0_0;
+  component pulseAcq_bd_clk_wiz_0_0 is
+  port (
+    clk_in1 : in STD_LOGIC;
+    clk_100 : out STD_LOGIC;
+    locked : out STD_LOGIC
+  );
+  end component pulseAcq_bd_clk_wiz_0_0;
+  component pulseAcq_bd_IDDR_inputStretcher_0_0 is
+  port (
+    clk : in STD_LOGIC;
+    dataIn : in STD_LOGIC_VECTOR ( 0 to 0 );
+    dataOut : out STD_LOGIC_VECTOR ( 0 to 0 )
+  );
+  end component pulseAcq_bd_IDDR_inputStretcher_0_0;
+  component pulseAcq_bd_IDDR_inputStretcher_0_1 is
+  port (
+    clk : in STD_LOGIC;
+    dataIn : in STD_LOGIC_VECTOR ( 7 downto 0 );
+    dataOut : out STD_LOGIC_VECTOR ( 7 downto 0 )
+  );
+  end component pulseAcq_bd_IDDR_inputStretcher_0_1;
+  component pulseAcq_bd_IDDR_inputStretcher_0_2 is
+  port (
+    clk : in STD_LOGIC;
+    dataIn : in STD_LOGIC_VECTOR ( 7 downto 0 );
+    dataOut : out STD_LOGIC_VECTOR ( 7 downto 0 )
+  );
+  end component pulseAcq_bd_IDDR_inputStretcher_0_2;
+  signal IDDR_inputStretcher_pulse_dataOut : STD_LOGIC_VECTOR ( 7 downto 0 );
+  signal IDDR_inputStretcher_timestamp_dataOut : STD_LOGIC_VECTOR ( 7 downto 0 );
+  signal IDDR_inputStretcher_trig_dataOut : STD_LOGIC_VECTOR ( 0 to 0 );
   signal PS_interconnect_M01_AXI_ARADDR : STD_LOGIC_VECTOR ( 31 downto 0 );
   signal PS_interconnect_M01_AXI_ARREADY : STD_LOGIC;
   signal PS_interconnect_M01_AXI_ARVALID : STD_LOGIC;
@@ -1958,6 +1994,9 @@ architecture STRUCTURE of pulseAcq_bd is
   signal axi_dma_0_M_AXI_S2MM_WSTRB : STD_LOGIC_VECTOR ( 7 downto 0 );
   signal axi_dma_0_M_AXI_S2MM_WVALID : STD_LOGIC;
   signal axi_gpio_0_gpio_io_o : STD_LOGIC_VECTOR ( 24 downto 0 );
+  signal clk_10_1 : STD_LOGIC;
+  signal clk_wiz_0_clk_100 : STD_LOGIC;
+  signal clk_wiz_0_locked : STD_LOGIC;
   signal processing_system7_0_DDR_ADDR : STD_LOGIC_VECTOR ( 14 downto 0 );
   signal processing_system7_0_DDR_BA : STD_LOGIC_VECTOR ( 2 downto 0 );
   signal processing_system7_0_DDR_CAS_N : STD_LOGIC;
@@ -1973,7 +2012,6 @@ architecture STRUCTURE of pulseAcq_bd is
   signal processing_system7_0_DDR_RAS_N : STD_LOGIC;
   signal processing_system7_0_DDR_RESET_N : STD_LOGIC;
   signal processing_system7_0_DDR_WE_N : STD_LOGIC;
-  signal processing_system7_0_FCLK_CLK0 : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_DDR_VRN : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_DDR_VRP : STD_LOGIC;
   signal processing_system7_0_FIXED_IO_MIO : STD_LOGIC_VECTOR ( 53 downto 0 );
@@ -2032,6 +2070,8 @@ architecture STRUCTURE of pulseAcq_bd is
   attribute X_INTERFACE_INFO of FIXED_IO_ps_clk : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO PS_CLK";
   attribute X_INTERFACE_INFO of FIXED_IO_ps_porb : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO PS_PORB";
   attribute X_INTERFACE_INFO of FIXED_IO_ps_srstb : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO PS_SRSTB";
+  attribute X_INTERFACE_INFO of clk_10 : signal is "xilinx.com:signal:clock:1.0 CLK.CLK_10 CLK";
+  attribute X_INTERFACE_PARAMETER of clk_10 : signal is "XIL_INTERFACENAME CLK.CLK_10, CLK_DOMAIN pulseAcq_bd_clk_10, FREQ_HZ 10000000, INSERT_VIP 0, PHASE 0.000";
   attribute X_INTERFACE_INFO of DDR_addr : signal is "xilinx.com:interface:ddrx:1.0 DDR ADDR";
   attribute X_INTERFACE_PARAMETER of DDR_addr : signal is "XIL_INTERFACENAME DDR, AXI_ARBITRATION_SCHEME TDM, BURST_LENGTH 8, CAN_DEBUG false, CAS_LATENCY 11, CAS_WRITE_LATENCY 11, CS_ENABLED true, DATA_MASK_ENABLED true, DATA_WIDTH 8, MEMORY_TYPE COMPONENTS, MEM_ADDR_MAP ROW_COLUMN_BANK, SLOT Single, TIMEPERIOD_PS 1250";
   attribute X_INTERFACE_INFO of DDR_ba : signal is "xilinx.com:interface:ddrx:1.0 DDR BA";
@@ -2041,12 +2081,31 @@ architecture STRUCTURE of pulseAcq_bd is
   attribute X_INTERFACE_INFO of DDR_dqs_p : signal is "xilinx.com:interface:ddrx:1.0 DDR DQS_P";
   attribute X_INTERFACE_INFO of FIXED_IO_mio : signal is "xilinx.com:display_processing_system7:fixedio:1.0 FIXED_IO MIO";
 begin
+  clk_10_1 <= clk_10;
   led0_b(0) <= xlslice_run_Dout(0);
   led0_g(0) <= xlslice_idle_Dout(0);
   led0_r(0) <= xlslice_err_Dout(0);
   pulse_1(7 downto 0) <= pulse(7 downto 0);
   timestamp_1(7 downto 0) <= timestamp(7 downto 0);
   trig_1 <= trig;
+IDDR_inputStretcher_pulse: component pulseAcq_bd_IDDR_inputStretcher_0_1
+     port map (
+      clk => clk_wiz_0_clk_100,
+      dataIn(7 downto 0) => pulse_1(7 downto 0),
+      dataOut(7 downto 0) => IDDR_inputStretcher_pulse_dataOut(7 downto 0)
+    );
+IDDR_inputStretcher_timestamp: component pulseAcq_bd_IDDR_inputStretcher_0_2
+     port map (
+      clk => clk_wiz_0_clk_100,
+      dataIn(7 downto 0) => timestamp_1(7 downto 0),
+      dataOut(7 downto 0) => IDDR_inputStretcher_timestamp_dataOut(7 downto 0)
+    );
+IDDR_inputStretcher_trig: component pulseAcq_bd_IDDR_inputStretcher_0_0
+     port map (
+      clk => clk_wiz_0_clk_100,
+      dataIn(0) => trig_1,
+      dataOut(0) => IDDR_inputStretcher_trig_dataOut(0)
+    );
 PS_interconnect: entity work.PS_interconnect_imp_8690ZS
      port map (
       DDR_addr(14 downto 0) => DDR_addr(14 downto 0),
@@ -2064,7 +2123,6 @@ PS_interconnect: entity work.PS_interconnect_imp_8690ZS
       DDR_ras_n => DDR_ras_n,
       DDR_reset_n => DDR_reset_n,
       DDR_we_n => DDR_we_n,
-      FCLK_CLK0 => processing_system7_0_FCLK_CLK0,
       FIXED_IO_ddr_vrn => FIXED_IO_ddr_vrn,
       FIXED_IO_ddr_vrp => FIXED_IO_ddr_vrp,
       FIXED_IO_mio(53 downto 0) => FIXED_IO_mio(53 downto 0),
@@ -2120,12 +2178,14 @@ PS_interconnect: entity work.PS_interconnect_imp_8690ZS
       S00_AXI_wready => axi_dma_0_M_AXI_S2MM_WREADY,
       S00_AXI_wstrb(7 downto 0) => axi_dma_0_M_AXI_S2MM_WSTRB(7 downto 0),
       S00_AXI_wvalid => axi_dma_0_M_AXI_S2MM_WVALID,
+      clk_100 => clk_wiz_0_clk_100,
+      ext_reset_in => clk_wiz_0_locked,
       peripheral_aresetn(0) => rst_ps7_0_50M_peripheral_aresetn(0)
     );
 axi_dma_0: component pulseAcq_bd_axi_dma_0_0
      port map (
       axi_resetn => rst_ps7_0_50M_peripheral_aresetn(0),
-      m_axi_s2mm_aclk => processing_system7_0_FCLK_CLK0,
+      m_axi_s2mm_aclk => clk_wiz_0_clk_100,
       m_axi_s2mm_awaddr(31 downto 0) => axi_dma_0_M_AXI_S2MM_AWADDR(31 downto 0),
       m_axi_s2mm_awburst(1 downto 0) => axi_dma_0_M_AXI_S2MM_AWBURST(1 downto 0),
       m_axi_s2mm_awcache(3 downto 0) => axi_dma_0_M_AXI_S2MM_AWCACHE(3 downto 0),
@@ -2144,7 +2204,7 @@ axi_dma_0: component pulseAcq_bd_axi_dma_0_0
       m_axi_s2mm_wvalid => axi_dma_0_M_AXI_S2MM_WVALID,
       s2mm_introut => NLW_axi_dma_0_s2mm_introut_UNCONNECTED,
       s2mm_prmry_reset_out_n => NLW_axi_dma_0_s2mm_prmry_reset_out_n_UNCONNECTED,
-      s_axi_lite_aclk => processing_system7_0_FCLK_CLK0,
+      s_axi_lite_aclk => clk_wiz_0_clk_100,
       s_axi_lite_araddr(9 downto 0) => PS_interconnect_M01_AXI_ARADDR(9 downto 0),
       s_axi_lite_arready => PS_interconnect_M01_AXI_ARREADY,
       s_axi_lite_arvalid => PS_interconnect_M01_AXI_ARVALID,
@@ -2171,7 +2231,7 @@ axi_gpio_0: component pulseAcq_bd_axi_gpio_0_0
      port map (
       gpio2_io_i(26 downto 0) => xlconcat_0_dout(26 downto 0),
       gpio_io_o(24 downto 0) => axi_gpio_0_gpio_io_o(24 downto 0),
-      s_axi_aclk => processing_system7_0_FCLK_CLK0,
+      s_axi_aclk => clk_wiz_0_clk_100,
       s_axi_araddr(8 downto 0) => ps7_0_axi_periph_M00_AXI_ARADDR(8 downto 0),
       s_axi_aresetn => rst_ps7_0_50M_peripheral_aresetn(0),
       s_axi_arready => ps7_0_axi_periph_M00_AXI_ARREADY,
@@ -2191,11 +2251,17 @@ axi_gpio_0: component pulseAcq_bd_axi_gpio_0_0
       s_axi_wstrb(3 downto 0) => ps7_0_axi_periph_M00_AXI_WSTRB(3 downto 0),
       s_axi_wvalid => ps7_0_axi_periph_M00_AXI_WVALID
     );
+clk_wiz_0: component pulseAcq_bd_clk_wiz_0_0
+     port map (
+      clk_100 => clk_wiz_0_clk_100,
+      clk_in1 => clk_10_1,
+      locked => clk_wiz_0_locked
+    );
 pulseAcq_0: component pulseAcq_bd_pulseAcq_0_0
      port map (
-      clk => processing_system7_0_FCLK_CLK0,
+      clk => clk_wiz_0_clk_100,
       counterMax(23 downto 0) => xlslice_0_Dout(23 downto 0),
-      pulse(7 downto 0) => pulse_1(7 downto 0),
+      pulse(7 downto 0) => IDDR_inputStretcher_pulse_dataOut(7 downto 0),
       resetn => xlslice_0_Dout1(0),
       state(2 downto 0) => pulseGen_0_state(2 downto 0),
       streamUpCounter(23 downto 0) => pulseAcq_0_streamUpCounter(23 downto 0),
@@ -2203,8 +2269,8 @@ pulseAcq_0: component pulseAcq_bd_pulseAcq_0_0
       streamUp_tlast => pulseAcq_0_streamUp_TLAST,
       streamUp_tready => pulseAcq_0_streamUp_TREADY,
       streamUp_tvalid => pulseAcq_0_streamUp_TVALID,
-      timestamp(7 downto 0) => timestamp_1(7 downto 0),
-      trig => trig_1
+      timestamp(7 downto 0) => IDDR_inputStretcher_timestamp_dataOut(7 downto 0),
+      trig => IDDR_inputStretcher_trig_dataOut(0)
     );
 xlconcat_0: component pulseAcq_bd_xlconcat_0_0
      port map (
