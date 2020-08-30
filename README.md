@@ -183,15 +183,15 @@ Each communication consists of the following data packets:
 ### i) pulseAcq (using *pulseAcqServer.py*)
 | Data packet| Direction | Length (bytes)| Description |
 |---|---|---|---|
-| \<ITER\> | Host PC -> TCP server | 4  | Number of trigger events |
-| \<COUNTER_MAX\> | Host PC -> TCP server | 4  | Max integration time for each trigger event (in units of 10ns) |
-| LEN_0 |  TCP server ->  Host PC | 4  | Trigger 0: length of the following data packet(in units of bytes) |
-| DATA_0 |  TCP server ->  Host PC | LEN_0  | Trigger 0: concatenated 64 bit timestamps |
-| LEN_1 | TCP server ->  Host PC | 4  | Trigger 1: length of the  following data packet (in units of bytes) |
-| DATA_1 | TCP server ->  Host PC | LEN_1  | Trigger 1: concatenated 64 bit timestamps |
+| \<ITER\> | TCP client -> TCP server | 4  | Number of trigger events |
+| \<COUNTER_MAX\> | TCP client -> TCP server | 4  | Max integration time for each trigger event (in units of 10ns) |
+| LEN_0 |  TCP server ->  TCP client | 4  | Trigger 0: length of the following data packet(in units of bytes) |
+| DATA_0 |  TCP server ->  TCP client | LEN_0  | Trigger 0: concatenated 64 bit timestamps |
+| LEN_1 | TCP server ->  TCP client | 4  | Trigger 1: length of the  following data packet (in units of bytes) |
+| DATA_1 | TCP server ->  TCP client | LEN_1  | Trigger 1: concatenated 64 bit timestamps |
 | ... | ... | ... | ... |
-| LEN_\<ITER - 1\> |  TCP server ->  Host PC | 4  | Trigger \<ITER - 1\>: length of the  following data packet (in units of bytes) |
-| DATA_\<ITER - 1\> | TCP server ->  Host PC | LEN_\<ITER - 1\> | Trigger \<ITER - 1\>: concatenated 64 bit timestamps |
+| LEN_\<ITER - 1\> |  TCP server ->  TCP client | 4  | Trigger \<ITER - 1\>: length of the  following data packet (in units of bytes) |
+| DATA_\<ITER - 1\> | TCP server ->  TCP client | LEN_\<ITER - 1\> | Trigger \<ITER - 1\>: concatenated 64 bit timestamps |
 
 **NOTE**: Pulse acquisition starts after receiving the \<ITER\> and \<COUNTER_MAX\> parameters. 
 
@@ -200,15 +200,15 @@ Each communication consists of the following data packets:
 
 | Data packet| Direction | Length (bytes)| Description |
 |---|---|---|---|
-| \<ITER\> | Host PC -> TCP server | 4  | Number of trigger events |
-| \<PULSE_WIDTH\> | Host PC -> TCP server | 4  | Pulse width (in units of 10ns) |
-| \<PERIOD\> | Host PC -> TCP server | 4  | Time between trigger events (in units of 1ms) |
-| LEN_0 |  Host PC -> TCP server | 4  | Trigger 0: length of the following data packet(in units of bytes) |
-| DATA_0 |  Host PC -> TCP server | LEN_0  | Trigger 0: concatenated 64 bit timestamps |
-| LEN_1 | Host PC -> TCP server | 4  | Trigger 1: length of the  following data packet (in units of bytes) |
-| DATA_1 | Host PC -> TCP server | LEN_1  | Trigger 1: concatenated 64 bit timestamps |
+| \<ITER\> | TCP client -> TCP server | 4  | Number of trigger events |
+| \<PULSE_WIDTH\> | TCP client -> TCP server | 4  | Pulse width (in units of 10ns) |
+| \<PERIOD\> | TCP client -> TCP server | 4  | Time between trigger events (in units of 1ms) |
+| LEN_0 |  TCP client -> TCP server | 4  | Trigger 0: length of the following data packet(in units of bytes) |
+| DATA_0 |  TCP client -> TCP server | LEN_0  | Trigger 0: concatenated 64 bit timestamps |
+| LEN_1 | TCP client -> TCP server | 4  | Trigger 1: length of the  following data packet (in units of bytes) |
+| DATA_1 | TCP client -> TCP server | LEN_1  | Trigger 1: concatenated 64 bit timestamps |
 | ... | ... | ... | ... |
-| LEN_\<ITER - 1\> |  Host PC -> TCP server | 4  | Trigger \<ITER - 1\>: length of the  following data packet (in units of bytes) |
-| DATA_\<ITER - 1\> | Host PC -> TCP server | LEN_\<ITER - 1\> | Trigger \<ITER - 1\>: concatenated 64 bit timestamps |   
+| LEN_\<ITER - 1\> |  TCP client -> TCP server | 4  | Trigger \<ITER - 1\>: length of the  following data packet (in units of bytes) |
+| DATA_\<ITER - 1\> | TCP client -> TCP server | LEN_\<ITER - 1\> | Trigger \<ITER - 1\>: concatenated 64 bit timestamps |   
 
 **NOTE**: The *pulseGenCachedServer.py* script caches all timestamps on local RAM. After receiving the data for the last trigger event the pulse generation is started.
