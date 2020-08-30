@@ -42,7 +42,8 @@ ssh xilinx@<IP address>
 ```
 sudo vi /etc/network/interfaces.d/eth0
 ```
-And change the *eth0* interface configuration to
+
+Change the *eth0* interface configuration to
 ```
 auto eth0
 iface eth0 inet dhcp 
@@ -55,15 +56,15 @@ netmask <netmask>
 
 8. Power off/on the device. 
 
-9. Create a network drive linked to the Samba file server running on your Pynq machine:
+9. Create a network drive linked to the [Samba file server](https://pynq.readthedocs.io/en/v2.0/getting_started.html#accessing-files-on-the-board) running on your Pynq machine:
 
 | File server property  | Value  | 
 |---|---|
-| url   | //<static IP address>/xilinx  | 
+| url   | //\<static IP address\>/xilinx  | 
 | usr   | xilinx | 
 | pwd   | xilinx  | 
 
-### pulseAcq
+### i) pulseAcq
 
 10. Using the file server, navigate to */xilinx/pynq/overlays/*.
 
@@ -74,7 +75,7 @@ netmask <netmask>
 
 13. Create a folder called */xilinx/jupyter_notebooks/pulseAcq* and copy in it the [pulseAcq.ipynb and pulseAcqServer.py files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseAcq/Pynq).
 
-### pulseGen
+### ii) pulseGen
 10. Using the file server, navigate to */xilinx/pynq/overlays/*.
 
 11. Create a folder called *pynq/overlays/pulseGen* and copy in it the [pulseGen.bit, pulseGen.tcl and pulseGen.hwh files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseGen/Pynq/pulseGen).
@@ -83,8 +84,8 @@ netmask <netmask>
 
 13. Create a folder called */xilinx/jupyter_notebooks/pulseGen* and copy in it the [pulseGen.ipynb, pulseGenServer.py and pulseGenCachedServer.py files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseAcq/Pynq).
 
-## Wiring and port assignements
-### pulseAcq
+## Port assignements
+### i) pulseAcq
 
 |Pin|Direction|IO Standard|Description|
 |---|---|---|---|
@@ -107,7 +108,7 @@ netmask <netmask>
 | 32 | In | LVCMOS 3.3V | Timestamp bit 6 | 
 | 33 | In | LVCMOS 3.3V | Timestamp bit 7 | 
 
-### pulseGen 
+### ii) pulseGen 
 |Pin|Direction|IO Standard|Description|
 |---|---|---|---|
 | 0 | Out | LVCMOS 3.3V | Pulse channel 0 | 
@@ -133,11 +134,11 @@ netmask <netmask>
 
 1. Connect to the Jupyter notebook server by introducing the static IP address of your Cora-Z7 board into your web browser (pwd: xilinx).
 
-### pulseAcq
+### i) pulseAcq
 
 2. Within your Jupyter notebook server, navigate to the *pulseAcq* directory and open the [pulseAcq.ipynb](https://github.com/dspsandbox/lidarTDC/blob/master/pulseAcq/Pynq/pulseAcq.ipynb). This interactive notebook is a basic example of the pulseAcq operation. 
 
-### pulseGen
+### ii) pulseGen
 
 2. Within your Jupyter notebook server, navigate to the *pulseGen* directory and open the [pulseGen.ipynb](https://github.com/dspsandbox/lidarTDC/blob/master/pulseGen/Pynq/pulseGen.ipynb). This interactive notebook is a basic example of the pulseGen operation. 
 
@@ -146,7 +147,7 @@ netmask <netmask>
 ```
 ssh xilinx@<static IP address>
 ```
-### pulseAcq
+### i) pulseAcq
 
 2. Navigate to the *jupyter_notebooks/pulseAcq* folder.
 
@@ -161,7 +162,7 @@ sudo python3 pulseAcqServer.py <static IP address> <TCP port>
 ```
 
 
-### pulseGen
+### ii) pulseGen
 
 2. Navigate to the *jupyter_notebooks/pulseGen* folder.
 
@@ -175,39 +176,39 @@ cd jupyter_notebooks/pulseGen
 sudo python3 pulseGenCachedServer.py <static IP address> <TCP port>
 ```
 
-```
-sudo python3 pulseGenCachedServer.py <static IP address> <TCP port>
-```
 
 ## Communication between Host PC and TCP servers
 
 Each communication consists of the following data packets:
-### pulseAcq (using *pulseAcqServer.py*)
+### i) pulseAcq (using *pulseAcqServer.py*)
 | Data packet| Direction | Length (bytes)| Description |
 |---|---|---|---|
-| <ITER> | Host PC -> TCP server | 4  | Number of trigger events |
-| <COUNTER_MAX> | Host PC -> TCP server | 4  | Max integration time for each trigger event (in units of 10ns) |
+| \<ITER\> | Host PC -> TCP server | 4  | Number of trigger events |
+| \<COUNTER_MAX\> | Host PC -> TCP server | 4  | Max integration time for each trigger event (in units of 10ns) |
 | DATA_LEN_0 |  TCP server ->  Host PC | 4  | Trigger 0: length of the following data packet(in units of bytes) |
 | DATA_0 |  TCP server ->  Host PC | DATA_LEN_0  | Trigger 0: concatenated 64 bit timestamps |
 | DATA_LEN_1 | TCP server ->  Host PC | 4  | Trigger 1: length of the  following data packet (in units of bytes) |
 | DATA_1 | TCP server ->  Host PC | DATA_LEN_1  | Trigger 1: concatenated 64 bit timestamps |
 | ... | ... | ... | ... |
-| DATA_LEN_<ITER - 1> |  TCP server ->  Host PC | 4  | Trigger <ITER - 1>: length of the  following data packet (in units of bytes) |
-| DATA_<ITER - 1> | TCP server ->  Host PC | DATA_LEN_<ITER - 1> | Trigger <ITER - 1>: concatenated 64 bit timestamps |
+| DATA_LEN_\<ITER - 1\> |  TCP server ->  Host PC | 4  | Trigger \<ITER - 1\>: length of the  following data packet (in units of bytes) |
+| DATA_\<ITER - 1\> | TCP server ->  Host PC | DATA_LEN_\<ITER - 1\> | Trigger \<ITER - 1\>: concatenated 64 bit timestamps |
 
 **NOTE**: Pulse acquisition starts after receiving the <ITER> and <COUNTER_MAX> parameters. 
 
    
-### pulseGen (using *pulseGenCachedServer.py*)
-| <ITER> | Host PC -> TCP server | 4  | Number of trigger events |
-| <PULSE_WIDTH> | Host PC -> TCP server | 4  | Pulse width (in units of 10ns) |
-| <PERIOD> | Host PC -> TCP server | 4  | Time between trigger events (in units of 1ms) |
+### ii) pulseGen (using *pulseGenCachedServer.py*)
+
+| Data packet| Direction | Length (bytes)| Description |
+|---|---|---|---|
+| \<ITER\> | Host PC -> TCP server | 4  | Number of trigger events |
+| \<PULSE_WIDTH\> | Host PC -> TCP server | 4  | Pulse width (in units of 10ns) |
+| \<PERIOD\> | Host PC -> TCP server | 4  | Time between trigger events (in units of 1ms) |
 | DATA_LEN_0 |  Host PC -> TCP server | 4  | Trigger 0: length of the following data packet(in units of bytes) |
 | DATA_0 |  Host PC -> TCP server | DATA_LEN_0  | Trigger 0: concatenated 64 bit timestamps |
 | DATA_LEN_1 | Host PC -> TCP server | 4  | Trigger 1: length of the  following data packet (in units of bytes) |
 | DATA_1 | Host PC -> TCP server | DATA_LEN_1  | Trigger 1: concatenated 64 bit timestamps |
 | ... | ... | ... | ... |
-| DATA_LEN_<ITER - 1> |  Host PC -> TCP server | 4  | Trigger <ITER - 1>: length of the  following data packet (in units of bytes) |
-| DATA_<ITER - 1> | Host PC -> TCP server | DATA_LEN_<ITER - 1> | Trigger <ITER - 1>: concatenated 64 bit timestamps |   
+| DATA_LEN_\<ITER - 1\> |  Host PC -> TCP server | 4  | Trigger \<ITER - 1\>: length of the  following data packet (in units of bytes) |
+| DATA_\<ITER - 1\> | Host PC -> TCP server | DATA_LEN_\<ITER - 1\> | Trigger \<ITER - 1\>: concatenated 64 bit timestamps |   
 
 **NOTE**: The *pulseGenCachedServer.py* script caches all timestamps on local RAM. After receiving the data for the last trigger event the sequential execution is started.
