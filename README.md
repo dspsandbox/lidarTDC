@@ -22,7 +22,7 @@
 * **PLL**. Phase lock loop. 
 * **DMA**. Direct memory access. Streams 64bit timestamps from FSM to RAM. 
 
-## Board configuration
+## Initial setup
 1. Download the SD card image [Pynq-Cora-Z7-10-2.5.img](https://drive.google.com/file/d/1jq1uyC-ckTANllmxDi5jF78LoCh2kb4u/view?usp=sharing). 
 
 2. Write SD card image. For instruction see [here](https://pynq.readthedocs.io/en/v2.5.1/appendix.html#writing-the-sd-card-image).
@@ -31,13 +31,12 @@
 
 4. Power up the device and connect it to your ethernet router/switch.
 
-5. Find the IP address of the device. This is most easily achieved by entering the configuration panel of your router or by using a network scanning tool.
+5. Find the automatically assigned IP address of the device. This is most easily achieved by entering the configuration panel of your router or by using a network scanning tool.
 
 6. SSH into your Cora-Z7-10 (usr: xilinx pwd: xilinx):
 ```
-ssh xilinx@X.X.X.X
+ssh xilinx@<IP address>
 ```
-where *X.X.X.X* is the IP address found in the previous step.
 
 7. Change the etherent settings to use a static IP address.  
 ```
@@ -50,10 +49,9 @@ iface eth0 inet dhcp
           
 auto eth0:1
 iface eth0:1 inet static
-address Y.Y.Y.Y
-netmask Z.Z.Z.Z
+address <static IP address>
+netmask <netmask>
 ```
-where *Y.Y.Y.Y* is the new static IP and *Z.Z.Z.Z* the netmask.
 
 8. Power off/on the device. 
 
@@ -61,19 +59,122 @@ where *Y.Y.Y.Y* is the new static IP and *Z.Z.Z.Z* the netmask.
 
 | File server property  | Value  | 
 |---|---|
-| url   | //Y.Y.Y.Y/xilinx  | 
+| url   | //<static IP address>/xilinx  | 
 | usr   | xilinx | 
 | pwd   | xilinx  | 
 
+### pulseAcq
+
 10. Using the file server, navigate to */xilinx/pynq/overlays/*.
 
-11. Create a folder called */xilinx/pynq/overlays/pulseAcq* and copy in it the [.bit .tcl and .hwh files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseAcq/Pynq/pulseAcq) of the pulse acquisition design.
+11. Create a folder called */xilinx/pynq/overlays/pulseAcq* and copy in it the [pulseAcq.bit, pulseAcq.tcl and pulseAcq.hwh files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseAcq/Pynq/pulseAcq).
 
-12. **OPTIONAL** Create a folder called *pynq/overlays/pulseGen* and copy in it the [.bit .tcl and .hwh files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseGen/Pynq/pulseGen) of the pulse generation design.  
 
-13. Using the file server, navigate to */xilinx/jupyter_notebooks*.
+12. Using the file server, navigate to */xilinx/jupyter_notebooks*.
 
-14. Create a folder called */xilinx/jupyter_notebooks/pulseAcq* and copy in it the [pulseAcq.ipynb and pulseAcqServer.py files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseAcq/Pynq).
+13. Create a folder called */xilinx/jupyter_notebooks/pulseAcq* and copy in it the [pulseAcq.ipynb and pulseAcqServer.py files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseAcq/Pynq).
 
-15. **OPTIONAL** Create a folder called */xilinx/jupyter_notebooks/pulseGen* and copy in it the [pulseGen.ipynb, pulseGenServer.py and pulseGenCachedServer.py files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseAcq/Pynq).
+### pulseGen
+10. Using the file server, navigate to */xilinx/pynq/overlays/*.
+
+11. Create a folder called *pynq/overlays/pulseGen* and copy in it the [pulseGen.bit, pulseGen.tcl and pulseGen.hwh files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseGen/Pynq/pulseGen) of the pulse generation design. 
+
+12. Using the file server, navigate to */xilinx/jupyter_notebooks*.
+
+13. Create a folder called */xilinx/jupyter_notebooks/pulseGen* and copy in it the [pulseGen.ipynb, pulseGenServer.py and pulseGenCachedServer.py files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseAcq/Pynq).
+
+## Wiring and port assignements
+### pulseAcq
+
+|Pin|Direction|IO Standard|Description|
+|---|---|---|---|
+| 0 | In | LVCMOS 3.3V | Pulse channel 0 | 
+| 1 | In | LVCMOS 3.3V | Pulse channel 1 | 
+| 2 | In | LVCMOS 3.3V | Pulse channel 2 | 
+| 3 | In | LVCMOS 3.3V | Pulse channel 3 | 
+| 4 | In | LVCMOS 3.3V | Pulse channel 4 | 
+| 5 | In | LVCMOS 3.3V | Pulse channel 5 | 
+| 6 | In | LVCMOS 3.3V | Pulse channel 6 | 
+| 7 | In | LVCMOS 3.3V | Pulse channel 7 | 
+| 8 | In | LVCMOS 3.3V | Ref clk (10 MHz) | 
+| 9 | In | LVCMOS 3.3V | Trig (rising edge) | 
+| 26 | In | LVCMOS 3.3V | Timestamp bit 0 | 
+| 27 | In | LVCMOS 3.3V | Timestamp bit 1 | 
+| 28 | In | LVCMOS 3.3V | Timestamp bit 2 | 
+| 29 | In | LVCMOS 3.3V | Timestamp bit 3 | 
+| 30 | In | LVCMOS 3.3V | Timestamp bit 4 | 
+| 31 | In | LVCMOS 3.3V | Timestamp bit 5 | 
+| 32 | In | LVCMOS 3.3V | Timestamp bit 6 | 
+| 33 | In | LVCMOS 3.3V | Timestamp bit 7 | 
+
+### pulseGen 
+|Pin|Direction|IO Standard|Description|
+|---|---|---|---|
+| 0 | Out | LVCMOS 3.3V | Pulse channel 0 | 
+| 1 | Out | LVCMOS 3.3V | Pulse channel 1 | 
+| 2 | Out | LVCMOS 3.3V | Pulse channel 2 | 
+| 3 | Out | LVCMOS 3.3V | Pulse channel 3 | 
+| 4 | Out | LVCMOS 3.3V | Pulse channel 4 | 
+| 5 | Out | LVCMOS 3.3V | Pulse channel 5 | 
+| 6 | Out | LVCMOS 3.3V | Pulse channel 6 | 
+| 7 | Out | LVCMOS 3.3V | Pulse channel 7 | 
+| 8 | Out | LVCMOS 3.3V | Ref clk (10 MHz) | 
+| 9 | Out | LVCMOS 3.3V | Trig (rising edge) | 
+| 26 | Out | LVCMOS 3.3V | Timestamp bit 0 | 
+| 27 | Out | LVCMOS 3.3V | Timestamp bit 1 | 
+| 28 | Out | LVCMOS 3.3V | Timestamp bit 2 | 
+| 29 | Out | LVCMOS 3.3V | Timestamp bit 3 | 
+| 30 | Out | LVCMOS 3.3V | Timestamp bit 4 | 
+| 31 | Out | LVCMOS 3.3V | Timestamp bit 5 | 
+| 32 | Out | LVCMOS 3.3V | Timestamp bit 6 | 
+| 33 | Out | LVCMOS 3.3V | Timestamp bit 7 | 
+
+## Running the Jupyter notebooks
+
+1. Connect to the Jupyter notebook server by introducing the static IP address of your Cora-Z7 board into your web browser (pwd: xilinx).
+
+### pulseAcq
+
+2. Within your Jupyter notebook server, navigate to the *pulseAcq* directory and open the [pulseAcq.ipynb](https://github.com/dspsandbox/lidarTDC/blob/master/pulseAcq/Pynq/pulseAcq.ipynb). This interactive notebook is a basic example of the pulseAcq operation. 
+
+### pulseGen
+
+2. Within your Jupyter notebook server, navigate to the *pulseGen* directory and open the [pulseGen.ipynb](https://github.com/dspsandbox/lidarTDC/blob/master/pulseGen/Pynq/pulseGen.ipynb). This interactive notebook is a basic example of the pulseGen operation. 
+
+## Running the TCP servers
+1. SSH into your Cora-Z7-10 (usr: xilinx pwd: xilinx):
+```
+ssh xilinx@<static IP address>
+```
+### pulseAcq
+
+2. Navigate to the *jupyter_notebooks/pulseAcq* folder.
+
+```
+cd jupyter_notebooks/pulseAcq
+```
+
+3. Execute *pulseAcqServer.py* script
+
+```
+sudo python3 pulseAcqServer.py <static IP address> <TCP port>
+```
+
+### pulseGen
+
+2. Navigate to the *jupyter_notebooks/pulseGen* folder.
+
+```
+cd jupyter_notebooks/pulseGen
+```
+
+3. Execute *pulseGenCachedServer.py* script
+
+```
+sudo python3 pulseGenCachedServer.py <static IP address> <TCP port>
+```
+
+
+
+
 
