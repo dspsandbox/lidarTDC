@@ -24,15 +24,21 @@
 
 ## Getting started
 1. Download the SD card image [Pynq-Cora-Z7-10-2.5.img](https://drive.google.com/file/d/1jq1uyC-ckTANllmxDi5jF78LoCh2kb4u/view?usp=sharing). 
+
 2. Write SD card image. For instruction see [here](https://pynq.readthedocs.io/en/v2.5.1/appendix.html#writing-the-sd-card-image).
+
 3. Configure jumper J2 of the Cora-Z7 board for microSD card boot. Further information is available in the [Cora-Z7 reference manual](https://reference.digilentinc.com/reference/programmable-logic/cora-z7/reference-manual).  
+
 4. Power up the device and connect it to your ethernet router/switch.
+
 5. Find the IP address of the device. This is most easily achieved by entering the configuration panel of your router or by using a network scanning tool.
+
 6. SSH into your Cora-Z7-10 (usr: xilinx pwd: xilinx):
 ```
 ssh xilinx@X.X.X.X
 ```
 where *X.X.X.X* is the IP address found in the previous step.
+
 7. Change the etherent settings to use a static IP address.  
 ```
 sudo vi /etc/network/interfaces.d/eth0
@@ -48,4 +54,5 @@ address Y.Y.Y.Y
 netmask Z.Z.Z.Z
 ```
 where *Y.Y.Y.Y* is the new static IP and *Z.Z.Z.Z* the netmask.
+
 8. Power off/on the device. 
