@@ -194,4 +194,4 @@ Each communication consists of the following data packets:
 | DATA_2 | pulseAcq TCP  ->  Host PC | DATA_LEN_2  | Trigger event 2: concatenated 64 bit timestamps |
 | ... | ... | ... | ... |
 | DATA_LEN_<ITER - 1> |  TCP server ->  Host PC | 4  | Trigger event <ITER - 1>: length of the  following data packet (in units of bytes) |
-| DATA_<ITER - 1> | TCP server ->  Host PC | DATA_LEN_<ITER - 1> bytes | Trigger event <ITER - 1>: concatenated 64 bit timestamps |
+| DATA_<ITER - 1> | TCP server ->  Host PC | DATA_LEN_<ITER - 1> | Trigger event <ITER - 1>: concatenated 64 bit timestamps |
