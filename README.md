@@ -22,7 +22,7 @@
 * **PLL**. Phase lock loop. 
 * **DMA**. Direct memory access. Streams 64bit timestamps from FSM to RAM. 
 
-## Getting started
+## Board configuration
 1. Download the SD card image [Pynq-Cora-Z7-10-2.5.img](https://drive.google.com/file/d/1jq1uyC-ckTANllmxDi5jF78LoCh2kb4u/view?usp=sharing). 
 
 2. Write SD card image. For instruction see [here](https://pynq.readthedocs.io/en/v2.5.1/appendix.html#writing-the-sd-card-image).
@@ -56,3 +56,20 @@ netmask Z.Z.Z.Z
 where *Y.Y.Y.Y* is the new static IP and *Z.Z.Z.Z* the netmask.
 
 8. Power off/on the device. 
+
+9. Create a network drive linked to the Samba file server running on your Pynq machine:
+
+| File server property  | Value  | 
+|---|---|
+| url   | //Y.Y.Y.Y/xilinx  | 
+| usr   | xilinx | 
+| pwd   | xilinx  | 
+
+10. Using the file server, navigate to *pynq/overlays/*.
+
+11. Create a folder called *pynq/overlays/pulseAcq* and copy in it the [.bit .tcl and .hwh files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseAcq/Pynq/pulseAcq) of the pulse acquisition design.
+
+12. OPTIONAL. Create a folder called *pynq/overlays/pulseGen* and copy in it the [.bit .tcl and .hwh files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseGen/Pynq/pulseGen) of the pulse generation design.  
+
+13. 
+
