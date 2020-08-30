@@ -22,3 +22,9 @@
 * **PLL**. Phase lock loop. 
 * **DMA**. Direct memory access. Streams 64bit timestamps from FSM to RAM. 
 
+## Getting started
+* Download the SD card image [Pynq-Cora-Z7-10-2.5.img](https://drive.google.com/file/d/1jq1uyC-ckTANllmxDi5jF78LoCh2kb4u/view?usp=sharing). 
+* Write SD card image. For instruction see [here](https://pynq.readthedocs.io/en/v2.5.1/appendix.html#writing-the-sd-card-image).
+* Configure jumper J2 of the Cora-Z7 board for microSD card boot. Further information is available in the [Cora-Z7 reference manual](https://reference.digilentinc.com/reference/programmable-logic/cora-z7/reference-manual).  
+* Power up the device and connect it to your ethernet router/switch.
+* Find the IP address of the device. This is most easily achieved by entering the configuration panel of your router or by using a network scanning tool.
