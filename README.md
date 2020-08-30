@@ -77,7 +77,7 @@ netmask <netmask>
 ### pulseGen
 10. Using the file server, navigate to */xilinx/pynq/overlays/*.
 
-11. Create a folder called *pynq/overlays/pulseGen* and copy in it the [pulseGen.bit, pulseGen.tcl and pulseGen.hwh files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseGen/Pynq/pulseGen) of the pulse generation design. 
+11. Create a folder called *pynq/overlays/pulseGen* and copy in it the [pulseGen.bit, pulseGen.tcl and pulseGen.hwh files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseGen/Pynq/pulseGen).
 
 12. Using the file server, navigate to */xilinx/jupyter_notebooks*.
 
@@ -154,7 +154,7 @@ ssh xilinx@<static IP address>
 cd jupyter_notebooks/pulseAcq
 ```
 
-3. Execute *pulseAcqServer.py* script
+3. Execute the *pulseAcqServer.py* script
 
 ```
 sudo python3 pulseAcqServer.py <static IP address> <TCP port>
@@ -168,13 +168,30 @@ sudo python3 pulseAcqServer.py <static IP address> <TCP port>
 cd jupyter_notebooks/pulseGen
 ```
 
-3. Execute *pulseGenCachedServer.py* script
+3. Execute the *pulseGenCachedServer.py* script
 
 ```
 sudo python3 pulseGenCachedServer.py <static IP address> <TCP port>
 ```
 
+```
+sudo python3 pulseGenCachedServer.py <static IP address> <TCP port>
+```
 
+## Communication between Host PC and TCP servers
+### pulseAcq
+Each communication consists of the following data packets:
 
-
-
+| Data packet| Direction | Length (bytes)| Description |
+|---|---|---|---|
+| <ITER> | Host PC -> TCP server | 4  | Number of expected trigger events |
+| <COUNTER_MAX> | Host PC -> TCP server | 4  | Max intgeration time (in units of 10ns) |
+| DATA_LEN_0 |  TCP server ->  Host PC | 4  | Trigger event 0: length of the following data packet(in units of bytes) |
+| DATA_0 |  TCP server ->  Host PC | DATA_LEN_0  | Trigger event 0: concatenated 64 bit timestamps |
+| DATA_LEN_1 | TCP server ->  Host PC | 4  | Trigger event 1: length of the  following data packet (in units of bytes) |
+| DATA_1 | TCP server ->  Host PC | DATA_LEN_1  | Trigger event 1: concatenated 64 bit timestamps |
+| DATA_LEN_2 |  TCP server ->  Host PC | 4  | Trigger event 2: length of the  following data packet (in units of bytes) |
+| DATA_2 | pulseAcq TCP  ->  Host PC | DATA_LEN_2  | Trigger event 2: concatenated 64 bit timestamps |
+| ... | ... | ... | ... |
+| DATA_LEN_<ITER - 1> |  TCP server ->  Host PC | 4  | Trigger event <ITER - 1>: length of the  following data packet (in units of bytes) |
+| DATA_<ITER - 1> | TCP server ->  Host PC | DATA_LEN_<ITER - 1> bytes | Trigger event <ITER - 1>: concatenated 64 bit timestamps |
