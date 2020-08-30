@@ -65,11 +65,15 @@ where *Y.Y.Y.Y* is the new static IP and *Z.Z.Z.Z* the netmask.
 | usr   | xilinx | 
 | pwd   | xilinx  | 
 
-10. Using the file server, navigate to *pynq/overlays/*.
+10. Using the file server, navigate to */xilinx/pynq/overlays/*.
 
-11. Create a folder called *pynq/overlays/pulseAcq* and copy in it the [.bit .tcl and .hwh files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseAcq/Pynq/pulseAcq) of the pulse acquisition design.
+11. Create a folder called */xilinx/pynq/overlays/pulseAcq* and copy in it the [.bit .tcl and .hwh files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseAcq/Pynq/pulseAcq) of the pulse acquisition design.
 
-12. OPTIONAL. Create a folder called *pynq/overlays/pulseGen* and copy in it the [.bit .tcl and .hwh files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseGen/Pynq/pulseGen) of the pulse generation design.  
+12. **OPTIONAL** Create a folder called *pynq/overlays/pulseGen* and copy in it the [.bit .tcl and .hwh files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseGen/Pynq/pulseGen) of the pulse generation design.  
 
-13. 
+13. Using the file server, navigate to */xilinx/jupyter_notebooks*.
+
+14. Create a folder called */xilinx/jupyter_notebooks/pulseAcq* and copy in it the [pulseAcq.ipynb and pulseAcqServer.py files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseAcq/Pynq).
+
+15. **OPTIONAL** Create a folder called */xilinx/jupyter_notebooks/pulseGen* and copy in it the [pulseGen.ipynb, pulseGenServer.py and pulseGenCachedServer.py files](https://github.com/dspsandbox/lidarTDC/tree/master/pulseAcq/Pynq).
 
