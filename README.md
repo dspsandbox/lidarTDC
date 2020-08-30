@@ -160,6 +160,7 @@ cd jupyter_notebooks/pulseAcq
 sudo python3 pulseAcqServer.py <static IP address> <TCP port>
 ```
 
+
 ### pulseGen
 
 2. Navigate to the *jupyter_notebooks/pulseGen* folder.
@@ -179,19 +180,34 @@ sudo python3 pulseGenCachedServer.py <static IP address> <TCP port>
 ```
 
 ## Communication between Host PC and TCP servers
-### pulseAcq
-Each communication consists of the following data packets:
 
+Each communication consists of the following data packets:
+### pulseAcq (using *pulseAcqServer.py*)
 | Data packet| Direction | Length (bytes)| Description |
 |---|---|---|---|
-| <ITER> | Host PC -> TCP server | 4  | Number of expected trigger events |
-| <COUNTER_MAX> | Host PC -> TCP server | 4  | Max intgeration time (in units of 10ns) |
-| DATA_LEN_0 |  TCP server ->  Host PC | 4  | Trigger event 0: length of the following data packet(in units of bytes) |
-| DATA_0 |  TCP server ->  Host PC | DATA_LEN_0  | Trigger event 0: concatenated 64 bit timestamps |
-| DATA_LEN_1 | TCP server ->  Host PC | 4  | Trigger event 1: length of the  following data packet (in units of bytes) |
-| DATA_1 | TCP server ->  Host PC | DATA_LEN_1  | Trigger event 1: concatenated 64 bit timestamps |
-| DATA_LEN_2 |  TCP server ->  Host PC | 4  | Trigger event 2: length of the  following data packet (in units of bytes) |
-| DATA_2 | pulseAcq TCP  ->  Host PC | DATA_LEN_2  | Trigger event 2: concatenated 64 bit timestamps |
+| <ITER> | Host PC -> TCP server | 4  | Number of trigger events |
+| <COUNTER_MAX> | Host PC -> TCP server | 4  | Max integration time for each trigger event (in units of 10ns) |
+| DATA_LEN_0 |  TCP server ->  Host PC | 4  | Trigger 0: length of the following data packet(in units of bytes) |
+| DATA_0 |  TCP server ->  Host PC | DATA_LEN_0  | Trigger 0: concatenated 64 bit timestamps |
+| DATA_LEN_1 | TCP server ->  Host PC | 4  | Trigger 1: length of the  following data packet (in units of bytes) |
+| DATA_1 | TCP server ->  Host PC | DATA_LEN_1  | Trigger 1: concatenated 64 bit timestamps |
 | ... | ... | ... | ... |
-| DATA_LEN_<ITER - 1> |  TCP server ->  Host PC | 4  | Trigger event <ITER - 1>: length of the  following data packet (in units of bytes) |
-| DATA_<ITER - 1> | TCP server ->  Host PC | DATA_LEN_<ITER - 1> | Trigger event <ITER - 1>: concatenated 64 bit timestamps |
+| DATA_LEN_<ITER - 1> |  TCP server ->  Host PC | 4  | Trigger <ITER - 1>: length of the  following data packet (in units of bytes) |
+| DATA_<ITER - 1> | TCP server ->  Host PC | DATA_LEN_<ITER - 1> | Trigger <ITER - 1>: concatenated 64 bit timestamps |
+
+**NOTE**: Pulse acquisition starts after receiving the <ITER> and <COUNTER_MAX> parameters. 
+
+   
+### pulseGen (using *pulseGenCachedServer.py*)
+| <ITER> | Host PC -> TCP server | 4  | Number of trigger events |
+| <PULSE_WIDTH> | Host PC -> TCP server | 4  | Pulse width (in units of 10ns) |
+| <PERIOD> | Host PC -> TCP server | 4  | Time between trigger events (in units of 1ms) |
+| DATA_LEN_0 |  Host PC -> TCP server | 4  | Trigger 0: length of the following data packet(in units of bytes) |
+| DATA_0 |  Host PC -> TCP server | DATA_LEN_0  | Trigger 0: concatenated 64 bit timestamps |
+| DATA_LEN_1 | Host PC -> TCP server | 4  | Trigger 1: length of the  following data packet (in units of bytes) |
+| DATA_1 | Host PC -> TCP server | DATA_LEN_1  | Trigger 1: concatenated 64 bit timestamps |
+| ... | ... | ... | ... |
+| DATA_LEN_<ITER - 1> |  Host PC -> TCP server | 4  | Trigger <ITER - 1>: length of the  following data packet (in units of bytes) |
+| DATA_<ITER - 1> | Host PC -> TCP server | DATA_LEN_<ITER - 1> | Trigger <ITER - 1>: concatenated 64 bit timestamps |   
+
+**NOTE**: The *pulseGenCachedServer.py* script caches all timestamps on local RAM. After receiving the data for the last trigger event the sequential execution is started.
