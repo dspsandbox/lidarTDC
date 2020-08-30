@@ -177,10 +177,15 @@ sudo python3 pulseGenCachedServer.py <static IP address> <TCP port>
 ```
 
 
-## Communication between Host PC and TCP servers
+## Communication between TCP clients and TCP servers
 
-Each communication consists of the following data packets:
-### i) pulseAcq (using *pulseAcqServer.py*)
+Each communication cycle consists of the following data packets:
+
+### i) pulseAcq 
+
+* TCP server: executing *pulseAcqServer.py* on Cora-Z7-10 board.
+* TCP client: any PC with network access to the Cora-Z7-10 board.
+
 | Data packet| Direction | Length (bytes)| Description |
 |---|---|---|---|
 | \<ITER\> | TCP client -> TCP server | 4  | Number of trigger events |
@@ -196,7 +201,10 @@ Each communication consists of the following data packets:
 **NOTE**: Pulse acquisition starts after receiving the \<ITER\> and \<COUNTER_MAX\> parameters. 
 
    
-### ii) pulseGen (using *pulseGenCachedServer.py*)
+### ii) pulseGen 
+
+* TCP server: executing *pulseGenCachedServer.py* on Cora-Z7-10 board.
+* TCP client: any PC with network access to the Cora-Z7-10 board.
 
 | Data packet| Direction | Length (bytes)| Description |
 |---|---|---|---|
