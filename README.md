@@ -182,8 +182,8 @@ sudo python3 pulseGenCachedServer.py <static IP address> <TCP port>
 ### i) pulseAcq 
 
 * TCP server: executing *pulseAcqServer.py* on Cora-Z7-10 board.
-* TCP client: any PC with network access to the Cora-Z7-10 board.
-* Each communication cycle consists of the following data packets:
+* TCP client: any PC with network access to the Cora-Z7-10 board. The TCP client has to establish a new connection to TCP server, send/receive all data packets and close the connection afterwards.
+* Data packets:
 
 | Data packet| Direction | Length (bytes)| Description |
 |---|---|---|---|
@@ -203,8 +203,8 @@ sudo python3 pulseGenCachedServer.py <static IP address> <TCP port>
 ### ii) pulseGen 
 
 * TCP server: executing *pulseGenCachedServer.py* on Cora-Z7-10 board.
-* TCP client: any PC with network access to the Cora-Z7-10 board.
-* Each communication cycle consists of the following data packets:
+* TCP client: any PC with network access to the Cora-Z7-10 board. The TCP client has to establish a new connection to TCP server, send/receive all data packets and close the connection afterwards.
+* Data packets:
 
 | Data packet| Direction | Length (bytes)| Description |
 |---|---|---|---|
