@@ -22,7 +22,7 @@
 * **PLL**. Phase lock loop. 
 * **DMA**. Direct memory access. Streams 64bit timestamps from FSM to RAM. 
 
-## Initial setup
+## Initial configuration
 1. Download the SD card image [Pynq-Cora-Z7-10-2.5.img](https://drive.google.com/file/d/1jq1uyC-ckTANllmxDi5jF78LoCh2kb4u/view?usp=sharing). 
 
 2. Write SD card image. For instruction see [here](https://pynq.readthedocs.io/en/v2.5.1/appendix.html#writing-the-sd-card-image).
