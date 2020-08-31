@@ -187,15 +187,15 @@ sudo python3 pulseGenCachedServer.py <static IP address> <TCP port>
 
 | Data packet| Direction | Length (bytes)| Description |
 |---|---|---|---|
-| \<ITER\> | TCP client -> TCP server | 4  | Number of trigger events |
-| \<COUNTER_MAX\> | TCP client -> TCP server | 4  | Max integration time for each trigger event (in units of 10ns) |
-| LEN_0 |  TCP server ->  TCP client | 4  | Trigger 0: length of the following data packet(in units of bytes) |
-| DATA_0 |  TCP server ->  TCP client | LEN_0  | Trigger 0: concatenated 64 bit timestamps |
-| LEN_1 | TCP server ->  TCP client | 4  | Trigger 1: length of the  following data packet (in units of bytes) |
-| DATA_1 | TCP server ->  TCP client | LEN_1  | Trigger 1: concatenated 64 bit timestamps |
+| \<ITER\> | client -> server | 4  | Number of trigger events |
+| \<COUNTER_MAX\> | client -> server | 4  | Max integration time for each trigger event (in units of 10ns) |
+| LEN_0 |  server ->  client | 4  | Trigger 0: length of the following data packet(in units of bytes) |
+| DATA_0 |  server ->  client | LEN_0  | Trigger 0: concatenated 64 bit timestamps |
+| LEN_1 | server ->  client | 4  | Trigger 1: length of the  following data packet (in units of bytes) |
+| DATA_1 | server ->  client | LEN_1  | Trigger 1: concatenated 64 bit timestamps |
 | ... | ... | ... | ... |
-| LEN_\<ITER - 1\> |  TCP server ->  TCP client | 4  | Trigger \<ITER - 1\>: length of the  following data packet (in units of bytes) |
-| DATA_\<ITER - 1\> | TCP server ->  TCP client | LEN_\<ITER - 1\> | Trigger \<ITER - 1\>: concatenated 64 bit timestamps |
+| LEN_\<ITER - 1\> |  server ->  client | 4  | Trigger \<ITER - 1\>: length of the  following data packet (in units of bytes) |
+| DATA_\<ITER - 1\> | server ->  client | LEN_\<ITER - 1\> | Trigger \<ITER - 1\>: concatenated 64 bit timestamps |
 
 **NOTE**: Pulse acquisition starts after receiving the \<ITER\> and \<COUNTER_MAX\> parameters. 
 
@@ -208,15 +208,15 @@ sudo python3 pulseGenCachedServer.py <static IP address> <TCP port>
 
 | Data packet| Direction | Length (bytes)| Description |
 |---|---|---|---|
-| \<ITER\> | TCP client -> TCP server | 4  | Number of trigger events |
-| \<PULSE_WIDTH\> | TCP client -> TCP server | 4  | Pulse width (in units of 10ns) |
-| \<PERIOD\> | TCP client -> TCP server | 4  | Time between trigger events (in units of 1ms) |
-| LEN_0 |  TCP client -> TCP server | 4  | Trigger 0: length of the following data packet(in units of bytes) |
-| DATA_0 |  TCP client -> TCP server | LEN_0  | Trigger 0: concatenated 64 bit timestamps |
-| LEN_1 | TCP client -> TCP server | 4  | Trigger 1: length of the  following data packet (in units of bytes) |
-| DATA_1 | TCP client -> TCP server | LEN_1  | Trigger 1: concatenated 64 bit timestamps |
+| \<ITER\> | client -> server | 4  | Number of trigger events |
+| \<PULSE_WIDTH\> | client -> server | 4  | Pulse width (in units of 10ns) |
+| \<PERIOD\> | client -> server | 4  | Time between trigger events (in units of 1ms) |
+| LEN_0 |  client -> server | 4  | Trigger 0: length of the following data packet(in units of bytes) |
+| DATA_0 |  client -> server | LEN_0  | Trigger 0: concatenated 64 bit timestamps |
+| LEN_1 | client -> server | 4  | Trigger 1: length of the  following data packet (in units of bytes) |
+| DATA_1 | client -> server | LEN_1  | Trigger 1: concatenated 64 bit timestamps |
 | ... | ... | ... | ... |
-| LEN_\<ITER - 1\> |  TCP client -> TCP server | 4  | Trigger \<ITER - 1\>: length of the  following data packet (in units of bytes) |
-| DATA_\<ITER - 1\> | TCP client -> TCP server | LEN_\<ITER - 1\> | Trigger \<ITER - 1\>: concatenated 64 bit timestamps |   
+| LEN_\<ITER - 1\> |  client -> server | 4  | Trigger \<ITER - 1\>: length of the  following data packet (in units of bytes) |
+| DATA_\<ITER - 1\> | client ->  server | LEN_\<ITER - 1\> | Trigger \<ITER - 1\>: concatenated 64 bit timestamps |   
 
 **NOTE**: The *pulseGenCachedServer.py* script caches all timestamps on local RAM. After receiving the data for the last trigger event the pulse generation is started.
