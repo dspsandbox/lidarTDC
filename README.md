@@ -187,7 +187,7 @@ sudo python3 pulseGenCachedServer.py <static IP address> <TCP port>
 
 | Data packet| Direction | Length (bytes)| Description |
 |---|---|---|---|
-| \<ITER\> | client -> server | 4  | Number of trigger events |
+| \<ITER\> | client -> server | 4  | Number of trigger events/iterations |
 | \<COUNTER_MAX\> | client -> server | 4  | Max integration time for each trigger event (in units of 10ns) |
 | LEN_0 |  server ->  client | 4  | Trigger 0: length of the following data packet(in units of bytes) |
 | DATA_0 |  server ->  client | LEN_0  | Trigger 0: concatenated 64 bit timestamps |
@@ -208,7 +208,7 @@ sudo python3 pulseGenCachedServer.py <static IP address> <TCP port>
 
 | Data packet| Direction | Length (bytes)| Description |
 |---|---|---|---|
-| \<ITER\> | client -> server | 4  | Number of trigger events |
+| \<ITER\> | client -> server | 4  | Number of trigger events/iterations |
 | \<PULSE_WIDTH\> | client -> server | 4  | Pulse width (in units of 10ns) |
 | \<PERIOD\> | client -> server | 4  | Time between trigger events (in units of 1ms) |
 | LEN_0 |  client -> server | 4  | Trigger 0: length of the following data packet(in units of bytes) |
