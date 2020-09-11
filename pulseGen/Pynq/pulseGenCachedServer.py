@@ -138,8 +138,8 @@ while(1):
         f.close()
     print("Cache transfer completed in {:.3f} ms.".format((time.time()-t)*1000))
     
-    #Config and reset
-    pulseGen.setPulseWidth(PULSE_WIDTH)
+    #Config and enable pulse generator core
+    pulseGen.setPulseWidth(PULSE_WIDTH)                                       #Set pulse width (in units of 10ns)
     pulseGen.setResetn(1)                                                     #Enable pulse generator core
     
     #Run pulse sequences
