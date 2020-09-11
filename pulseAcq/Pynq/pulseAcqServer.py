@@ -1,5 +1,6 @@
 import time
 import sys
+import os
 from pynq import Overlay, MMIO, allocate
 from pynq import MMIO
 import numpy as np
@@ -23,7 +24,6 @@ TIMEOUT = 0.1
 #DMA buffer size
 bufferLen64=10000         #buffer len 64bit
 bufferLen8=8*bufferLen64  #buffer len 8bit
-
 
 ####################################################
 # Func/class definitions
@@ -100,7 +100,6 @@ buffer1 = allocate(bufferLen64, dtype=np.uint64)
 bufferAddress1=buffer1.physical_address
 bufferList=[buffer0,buffer1]
 bufferAddressList=[bufferAddress0,bufferAddress1]
-
 
 ####################################################
 # Server
