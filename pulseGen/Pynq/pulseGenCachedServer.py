@@ -5,7 +5,8 @@ from pynq import MMIO
 import numpy as np
 import socket
 import os
-ol = Overlay("pulseGen.bit")
+ol = Overlay("pulseGen.bit") #Load bitstream
+os.nice(-20 - os.nice(0))    #Set process priority
 
 ####################################################
 # Parameters
