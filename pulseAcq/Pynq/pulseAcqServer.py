@@ -4,7 +4,8 @@ from pynq import Overlay, MMIO, allocate
 from pynq import MMIO
 import numpy as np
 import socket
-ol = Overlay("pulseAcq.bit")
+ol = Overlay("pulseAcq.bit") #Load bitstream
+os.nice(-20 - os.nice(0))    #Set process priority
 
 ####################################################
 # Parameters
