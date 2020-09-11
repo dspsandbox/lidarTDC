@@ -140,7 +140,6 @@ while(1):
     
     #Config and reset
     pulseGen.setPulseWidth(PULSE_WIDTH)
-    pulseGen.setResetn(0)                                                     #Disable pulse generator core
     pulseGen.setResetn(1)                                                     #Enable pulse generator core
     
     #Run pulse sequences
