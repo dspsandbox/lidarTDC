@@ -119,15 +119,17 @@ while(1):
    
     #Config 
     pulseAcq.setCounterMax(COUNTER_MAX)                                      #Max integration time (in units of 10ns)
-    pulseAcq.setResetn(1)                                                    #Enable pulse acquisition core
+    
 
     #Run acquisition
     for i in range(0,ITERATIONS):
+        pulseAcq.setResetn(0)                                                #Disable pulse acquisition core
         pulseAcq.dmaS2MMHalt()                                               #Halt DMA
         pulseAcq.dmaS2MMReset()                                              #Reset DMA
         pulseAcq.dmaS2MMStart()                                              #Start DMA
         pulseAcq.dmaS2MMConfig(bufferAddressList[(i+1)%2])                   #Config DMA, data are writtten into buffer[modulo2(i+1)]
         pulseAcq.dmaS2MMRun(bufferLen8)                                      #Run DMA
+        pulseAcq.setResetn(1)                                                #Enable pulse acquisition core
         
         #For all iterations except first previous data are sent while pulse acquisistion is running
         if i>0:
@@ -135,16 +137,12 @@ while(1):
             sendData(data,conn)                                                                                   
 
         while(not(pulseAcq.dmaS2MMIsIdle())): pass                           #Wait for pulse acquisition to finsh
-        if i==0: t=time.time()
-        print("{:03d}  t: {:.3f} ms".format(i,(time.time()-t)*1000))
-        t=time.time()
         
         #Get info and rise error message if state is not 1 (idle)
         state = pulseAcq.getState()
         streamUpCounter = pulseAcq.getStreamUpCounter()  
         if state != (1<<0):
-            print("Error. state: {} streamUpCounter: {}".format(state,streamUpCounter))
-            break
+            print("Error. iteration: {}  state: {}  streamUpCounter: {}".format(i,state,streamUpCounter))
             
         #Additional data transfer for last iteration 
         if i==(ITERATIONS-1):
