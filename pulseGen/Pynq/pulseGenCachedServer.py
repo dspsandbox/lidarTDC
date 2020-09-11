@@ -161,17 +161,17 @@ while(1):
             dataLen8=len(data)
             dataLen64=int(dataLen8/8)
             np.copyto(bufferList[0][:dataLen64],np.frombuffer(data,dtype=np.uint64))  #Copy data to DMA buffer[0]
-            dataLen64_0=dataLen64                                                #Save datalen8 of first iteration 
+            dataLen64_0=dataLen64                                                     #Save datalen8 of first iteration 
             
         # Restart, configure and run DMA engine
         pulseGen.dmaMM2SHalt()
         pulseGen.dmaMM2SReset()
         pulseGen.dmaMM2SStart()
-        pulseGen.dmaMM2SConfig(bufferAddressList[i%2])                         #DMA reads from buffer[modulo2(i)]
+        pulseGen.dmaMM2SConfig(bufferAddressList[i%2])                                #DMA reads from buffer[modulo2(i)]
         pulseGen.dmaMM2SRun(dataLen8)                                            
         
-        pulseGen.setTrig(1)                                                    #Set trigger HIGH (starts pulse generator core)
-        pulseGen.setTrig(0)                                                    #Set trigger LOW
+        pulseGen.setTrig(1)                                                           #Set trigger HIGH (starts pulse generator core)
+        pulseGen.setTrig(0)                                                           #Set trigger LOW
         
         #Read next data while pulse generator is running
         if i < (ITERATIONS-1):                                                 
@@ -183,7 +183,7 @@ while(1):
             dataLen64=int(dataLen8/8)
             np.copyto(bufferList[(i+1)%2][:dataLen64],np.frombuffer(data,dtype=np.uint64))  #Copy data to DMA buffer[mudulo2(i+1)]
             
-        while(pulseGen.getState()==(1<<1)): pass                               #Wait for pulse generator to finish
+        while(pulseGen.getState()==(1<<1)): pass                                            #Wait for pulse generator to finish
         
         #Get info and rise error message if state is not 1 (idle) or streamDownCounter is different to dataLen64
         streamDownCounter = pulseGen.getStreamDownCounter()                   
@@ -192,6 +192,6 @@ while(1):
             print("Error. state: {} downStreamCounter: {}".format(state,streamDownCounter))
             break
         
-        
+    pulseGen.setResetn(0)                                                                    #Disable pulse generator core    
     conn.close()
     print("Connection to client closed.")
