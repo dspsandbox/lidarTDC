@@ -108,7 +108,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((TCP_IP, TCP_PORT))
 s.listen(1)
 while(1):
-    s.settimeout(None)                                                       #Infinite timeout for waiting for
+    s.settimeout(None)                                                       #Infinite timeout for waiting for client connection request
     print("Waiting for client connection request.")
     conn, addr = s.accept()                                                  #Wait for client
     print("Connection to client {} established.".format(addr))
@@ -117,11 +117,9 @@ while(1):
     #Transfer parameters
     ITERATIONS,COUNTER_MAX=recvParamList(conn,numberOfParam=2)               
    
-    #Config and reset
-    pulseAcq.setCounterMax(COUNTER_MAX)
-    
-    
-    
+    #Config 
+    pulseAcq.setCounterMax(COUNTER_MAX)                                      #Max integration time (in units of 10ns)
+
     #Run acquisition
     for i in range(0,ITERATIONS):
         pulseAcq.setResetn(0)                                                #Disable pulse acquisition core
