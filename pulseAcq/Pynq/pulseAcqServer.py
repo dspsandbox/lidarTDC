@@ -156,7 +156,7 @@ while(1):
             data=(bufferList[(i+1)%2][:streamUpCounter]).tobytes()           #Get bytes string of buffer[modulo2(i+1)]
             sendData(data,conn)       
         
-        
+    pulseAcq.setResetn(0)                                                    #Disable pulse acquisition core  
     conn.close()
     print("Connection to client closed.")
 
