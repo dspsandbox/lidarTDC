@@ -119,18 +119,15 @@ while(1):
    
     #Config 
     pulseAcq.setCounterMax(COUNTER_MAX)                                      #Max integration time (in units of 10ns)
+    pulseAcq.setResetn(1)                                                    #Enable pulse acquisition core
 
     #Run acquisition
     for i in range(0,ITERATIONS):
-        pulseAcq.setResetn(0)                                                #Disable pulse acquisition core
-
         pulseAcq.dmaS2MMHalt()                                               #Halt DMA
         pulseAcq.dmaS2MMReset()                                              #Reset DMA
         pulseAcq.dmaS2MMStart()                                              #Start DMA
         pulseAcq.dmaS2MMConfig(bufferAddressList[(i+1)%2])                   #Config DMA, data are writtten into buffer[modulo2(i+1)]
         pulseAcq.dmaS2MMRun(bufferLen8)                                      #Run DMA
-        
-        pulseAcq.setResetn(1)                                                #Enable pulse acquisition core
         
         #For all iterations except first previous data are sent while pulse acquisistion is running
         if i>0:
@@ -157,5 +154,3 @@ while(1):
     pulseAcq.setResetn(0)                                                    #Disable pulse acquisition core  
     conn.close()
     print("Connection to client closed.")
-
-
