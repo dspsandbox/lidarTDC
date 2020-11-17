@@ -93,4 +93,4 @@ make
 ```
 ./pulseAcqTest
 ```
-![Screen shot](doc/pulseAcqTest.png | width=300)
+![Screen shot](doc/pulseAcqTest.png|width=300)
