@@ -81,7 +81,6 @@ sftp> mkdir <dirName>
 sftp> cd <dirName>
 sftp> mput *
 ```
-```
 6. Quit the SFTP command line:
 ```
 sftp> quit
