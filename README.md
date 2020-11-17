@@ -95,6 +95,6 @@ cmod +x runme.sh
 ```
 3. Upload bistream, build and run *pulseAcqTest.cpp*:
 ```
-sudo runme.sh
+sudo ./runme.sh
 ```
 <img src="doc/pulseAcqTest.png" width="350">
