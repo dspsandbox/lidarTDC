@@ -74,7 +74,11 @@ sftp> mkdir <dirName>
 sftp> cd <dirName>
 sftp> mput *
 ```
-6. Quit the SFTP command line:
+6. Within the SFTP command line: 
+```
+sftp> chmod +x runme.sh
+```
+7. Quit the SFTP command line:
 ```
 sftp> quit
 ```
@@ -85,12 +89,12 @@ Connect over SSH to the Cora-Z7-10 board (user: ubuntu pwd: temppwd) and issue t
 ```
 cd <dirName>
 ```
-2. Build test script
+2. Convert *runme.sh* into an executable script:
 ```
-make
+cmod +x runme.sh
 ```
-3. Run test script
+2. Upload bistream, build test script and run test script
 ```
-sudo ./pulseAcqTest
-```
-<img src="doc/pulseAcqTest.png" width="300">
+sudo runme.sh
+
+<img src="doc/pulseAcqTest.png" width="400">
