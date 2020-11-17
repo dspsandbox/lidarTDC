@@ -83,7 +83,7 @@ sftp> chmod +x runme.sh
 sftp> quit
 ```
 
-## Build and run test script 
+## Build and run *pulseAcqTest.cpp* 
 Connect over SSH to the Cora-Z7-10 board (user: ubuntu pwd: temppwd) and issue the following commands.
 1. Move to the created remote directory
 ```
@@ -93,8 +93,8 @@ cd <dirName>
 ```
 cmod +x runme.sh
 ```
-2. Upload bistream, build test script and run test script
+3. Upload bistream, build and run *pulseAcqTest.cpp*:
 ```
 sudo runme.sh
-
+```
 <img src="doc/pulseAcqTest.png" width="400">
