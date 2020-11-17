@@ -79,6 +79,8 @@ class zynq():
         os.system("vivado -mode batch -source "+str(pathlib.Path(tempDir,"bootgen.tcl").as_posix()))
         #Copy .bin to Resources
         shutil.copyfile(bitstreamPathBIT+".bin",bitstreamPathBIN)
+        #Remove originally created .bin file
+        os.remove(bitstreamPathBIT+".bin")
         #Clean Vivado .log and .jou files
         os.system("del *.jou *.log")
         #Clean temp folder
