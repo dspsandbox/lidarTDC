@@ -48,6 +48,7 @@ network:
       gateway4:  <gateway>
 ```
 ## Install C++ compiler 
+Connect over SSH to the Cora-Z7-10 board (user: ubuntu pwd: temppwd) and issue the following command:
 ```
 sudo apt install build-essential
 ```
