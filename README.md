@@ -91,6 +91,6 @@ make
 ```
 3. Run test script
 ```
-./pulseAcqTest
+sudo ./pulseAcqTest
 ```
 <img src="doc/pulseAcqTest.png" width="300">
