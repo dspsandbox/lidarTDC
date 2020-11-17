@@ -97,4 +97,4 @@ cmod +x runme.sh
 ```
 sudo runme.sh
 ```
-<img src="doc/pulseAcqTest.png" width="400">
+<img src="doc/pulseAcqTest.png" width="350">
