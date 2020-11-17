@@ -52,3 +52,45 @@ network:
 sudo apt install build-essential
 ```
 
+## Upload bitstream, source codes...
+1. Download this branch
+```
+git clone --single-branch --branch C++Backend https://github.com/dspsandbox/lidarTDC
+```
+2. Move into the *remote* folder:
+```
+cd lidarTDC/remote
+```
+3. Transfer the folder content to your Zynq. In the following code we use SFTP for it (user: ubuntu pwd: temppwd):
+```
+sftp <user>@<IpAddress>
+```
+4. (Optional) Within the SFTP command line create a directory to transfer the files:
+```
+sftp> mkdir <dirName>
+```
+5. Within the SFTP command line, move the contents to the remote directory:
+```
+sftp> cd <dirName>
+sftp> mput *
+```
+6. Quit the SFTP command line:
+```
+sftp> quit
+```
+
+## Build and run test script 
+Connect over SSH to the Cora-Z7-10 board (user: ubuntu pwd: temppwd) and issue the following commands.
+1. Move to the created remote directory
+```
+cd <dirName>
+```
+2. Build test script
+```
+make
+```
+3. Run test script
+```
+./pulseAcqTest
+```
+![Screen shot](doc/pulseAcqTest.png | width=300)
