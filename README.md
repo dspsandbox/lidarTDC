@@ -1,4 +1,10 @@
 # C++ Backend
+## Introduction
+This branch is devoted to set up Ubunu on the Zynq PS of the Cora-Z7-10-Board and run the pulse acquisistion logic in C++. To this end, the following developments have ben done:
+* Petalinux build with reserved memory (250MB) for DMA operations. The root file sytem is Ubuntu 18.04.03 LTS.
+* C++ Library for the pulse acquisition logic
+* C++ test code
+
 ## Initial configuration 
 The following steps target a Linux machine: 
 
@@ -75,11 +81,8 @@ sftp> mkdir <dirName>
 sftp> cd <dirName>
 sftp> mput *
 ```
-6. Within the SFTP command line: 
 ```
-sftp> chmod +x runme.sh
-```
-7. Quit the SFTP command line:
+6. Quit the SFTP command line:
 ```
 sftp> quit
 ```
