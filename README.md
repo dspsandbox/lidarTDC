@@ -85,7 +85,7 @@ sftp> quit
 ```
 
 ## Build and run *pulseAcqTest.cpp* 
-Connect over SSH to the Cora-Z7-10 board (user: ubuntu pwd: temppwd) and issue the following commands.
+Connect over SSH to the Cora-Z7-10 board (user: ubuntu pwd: temppwd) and issue the following commands:
 1. Move to the created remote directory
 ```
 cd <dirName>
