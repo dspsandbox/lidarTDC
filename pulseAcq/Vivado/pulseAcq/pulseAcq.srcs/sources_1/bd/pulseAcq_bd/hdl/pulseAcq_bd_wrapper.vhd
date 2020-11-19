@@ -1,7 +1,7 @@
 --Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
---Date        : Mon Aug 17 08:16:29 2020
+--Date        : Wed Nov 18 09:56:11 2020
 --Host        : 5CD010B25T running 64-bit major release  (build 9200)
 --Command     : generate_target pulseAcq_bd_wrapper.bd
 --Design      : pulseAcq_bd_wrapper
@@ -39,6 +39,8 @@ entity pulseAcq_bd_wrapper is
     led0_g : out STD_LOGIC_VECTOR ( 0 to 0 );
     led0_r : out STD_LOGIC_VECTOR ( 0 to 0 );
     pulse : in STD_LOGIC_VECTOR ( 7 downto 0 );
+    shield_i2c_scl_io : inout STD_LOGIC;
+    shield_i2c_sda_io : inout STD_LOGIC;
     timestamp : in STD_LOGIC_VECTOR ( 7 downto 0 );
     trig : in STD_LOGIC
   );
@@ -74,9 +76,29 @@ architecture STRUCTURE of pulseAcq_bd_wrapper is
     DDR_dm : inout STD_LOGIC_VECTOR ( 3 downto 0 );
     DDR_dq : inout STD_LOGIC_VECTOR ( 31 downto 0 );
     DDR_dqs_n : inout STD_LOGIC_VECTOR ( 3 downto 0 );
-    DDR_dqs_p : inout STD_LOGIC_VECTOR ( 3 downto 0 )
+    DDR_dqs_p : inout STD_LOGIC_VECTOR ( 3 downto 0 );
+    shield_i2c_scl_i : in STD_LOGIC;
+    shield_i2c_scl_o : out STD_LOGIC;
+    shield_i2c_scl_t : out STD_LOGIC;
+    shield_i2c_sda_i : in STD_LOGIC;
+    shield_i2c_sda_o : out STD_LOGIC;
+    shield_i2c_sda_t : out STD_LOGIC
   );
   end component pulseAcq_bd;
+  component IOBUF is
+  port (
+    I : in STD_LOGIC;
+    O : out STD_LOGIC;
+    T : in STD_LOGIC;
+    IO : inout STD_LOGIC
+  );
+  end component IOBUF;
+  signal shield_i2c_scl_i : STD_LOGIC;
+  signal shield_i2c_scl_o : STD_LOGIC;
+  signal shield_i2c_scl_t : STD_LOGIC;
+  signal shield_i2c_sda_i : STD_LOGIC;
+  signal shield_i2c_sda_o : STD_LOGIC;
+  signal shield_i2c_sda_t : STD_LOGIC;
 begin
 pulseAcq_bd_i: component pulseAcq_bd
      port map (
@@ -106,7 +128,27 @@ pulseAcq_bd_i: component pulseAcq_bd
       led0_g(0) => led0_g(0),
       led0_r(0) => led0_r(0),
       pulse(7 downto 0) => pulse(7 downto 0),
+      shield_i2c_scl_i => shield_i2c_scl_i,
+      shield_i2c_scl_o => shield_i2c_scl_o,
+      shield_i2c_scl_t => shield_i2c_scl_t,
+      shield_i2c_sda_i => shield_i2c_sda_i,
+      shield_i2c_sda_o => shield_i2c_sda_o,
+      shield_i2c_sda_t => shield_i2c_sda_t,
       timestamp(7 downto 0) => timestamp(7 downto 0),
       trig => trig
+    );
+shield_i2c_scl_iobuf: component IOBUF
+     port map (
+      I => shield_i2c_scl_o,
+      IO => shield_i2c_scl_io,
+      O => shield_i2c_scl_i,
+      T => shield_i2c_scl_t
+    );
+shield_i2c_sda_iobuf: component IOBUF
+     port map (
+      I => shield_i2c_sda_o,
+      IO => shield_i2c_sda_io,
+      O => shield_i2c_sda_i,
+      T => shield_i2c_sda_t
     );
 end STRUCTURE;
