@@ -38,7 +38,7 @@ int main() {
         //Acquisition
         pulseAcq.dmaS2MMRun(BUFFER_ADDRESS_RANGE);        //Run DMA engine
         while(pulseAcq.dmaS2MMIsIdle() == false){};       //Wait until acquisistion is finished
-        streamUpCounter = pulseAcq.getStreamUpCounter();  //Get acquired data samples
+        streamUpCounter = pulseAcq.getStreamUpCounter();  //Get number of acquired pulse events
         state = pulseAcq.getState();                      //Get state of acquisiston logic
         //I2C
         //i2cDataWrite = i;    
