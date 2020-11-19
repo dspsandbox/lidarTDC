@@ -25,6 +25,7 @@ PulseAcq::PulseAcq(void){
 
 	gpioReg = (uint32_t*) mmap(NULL, GPIO_ADDRESS_RANGE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, GPIO_ADDRESS_OFFSET);
 	dmaReg = (uint32_t*) mmap(NULL, DMA_ADDRESS_RANGE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, DMA_ADDRESS_OFFSET);
+	i2cReg = (uint32_t*) mmap(NULL, I2C_ADDRESS_RANGE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, I2C_ADDRESS_OFFSET);
 	buffer = (uint64_t*) mmap(NULL, BUFFER_ADDRESS_RANGE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, BUFFER_ADDRESS_OFFSET);
 	
 	close(fd);
@@ -38,6 +39,7 @@ PulseAcq::PulseAcq(void){
 PulseAcq::~PulseAcq(void){
 	munmap((void*)gpioReg,GPIO_ADDRESS_RANGE);
 	munmap((void*)dmaReg,DMA_ADDRESS_RANGE);
+	munmap((void*)i2cReg,I2C_ADDRESS_RANGE);
 	munmap((void*)buffer,BUFFER_ADDRESS_RANGE);
 };
 
@@ -51,7 +53,7 @@ PulseAcq::~PulseAcq(void){
 void PulseAcq::setResetn(bool val){	
 	int mask = 0b1111111111111111111111110;
 	gpioData = (gpioData & mask) | val;
-	gpioReg[0x0] = gpioData;
+	gpioReg[0x0/4] = gpioData;
 };
 
 /*********************************************************************
@@ -65,7 +67,7 @@ void PulseAcq::setResetn(bool val){
 void PulseAcq::setCounterMax(int val){
 	int mask=0b0000000000000000000000001;
 	gpioData = (gpioData & mask) | (val << 1);
-	gpioReg[0x0] = gpioData;
+	gpioReg[0x0/4] = gpioData;
 };
 
 /*********************************************************************
@@ -75,7 +77,7 @@ void PulseAcq::setCounterMax(int val){
 *********************************************************************/
 int PulseAcq::getState(void){
 	int mask = 0b000000000000000000000000111;
-	return(gpioReg[0x2] & mask);
+	return(gpioReg[0x8/4] & mask);
 };
 
 /*********************************************************************
@@ -88,7 +90,7 @@ int PulseAcq::getState(void){
 *********************************************************************/
 int PulseAcq::getStreamUpCounter(void){
 	int mask = 0b111111111111111111111111000;
-	return((gpioReg[0x2] & mask) >> 3);
+	return((gpioReg[0x8/4] & mask) >> 3);
 };
 
 /*********************************************************************
@@ -97,7 +99,7 @@ int PulseAcq::getStreamUpCounter(void){
 * Starts stream to memory mapped DMA channel.
 *********************************************************************/
 void PulseAcq::dmaS2MMStart(void){
-	dmaReg[0xC] = 1;
+	dmaReg[0x30/4] = 1;
 };
 
 /*********************************************************************
@@ -106,7 +108,7 @@ void PulseAcq::dmaS2MMStart(void){
 * Halts stream to memory mapped DMA channel.
 *********************************************************************/
 void PulseAcq::dmaS2MMHalt(void){
-	dmaReg[0xC] = 0;
+	dmaReg[0x30/4] = 0;
 };
 
 /*********************************************************************
@@ -115,7 +117,7 @@ void PulseAcq::dmaS2MMHalt(void){
 * Resets stream to memory mapped DMA channel.
 *********************************************************************/
 void PulseAcq::dmaS2MMReset(void){
-	dmaReg[0xC] = (1 << 2);
+	dmaReg[0x30/4] = (1 << 2);
 };
 
 /*********************************************************************
@@ -129,7 +131,7 @@ void PulseAcq::dmaS2MMReset(void){
 *                      for DMA operations.
 *********************************************************************/
 void PulseAcq::dmaS2MMConfig(int bufferAddress){
-	dmaReg[0x12] = (uint32_t) bufferAddress;
+	dmaReg[0x48/4] = (uint32_t) bufferAddress;
 }; 
 
 /*********************************************************************
@@ -142,7 +144,7 @@ void PulseAcq::dmaS2MMConfig(int bufferAddress){
 *                       DMA operation stays below this value.
 *********************************************************************/
 void PulseAcq::dmaS2MMRun(int bufferBytesLen){
-	dmaReg[0x16] = (uint32_t) bufferBytesLen;
+	dmaReg[0x58/4] = (uint32_t) bufferBytesLen;
 };
 
 /*********************************************************************
@@ -153,5 +155,81 @@ void PulseAcq::dmaS2MMRun(int bufferBytesLen){
 * @return 0-> DMA running 1-> DMA idle
 *********************************************************************/
 bool PulseAcq::dmaS2MMIsIdle(void){
-	return((bool) (dmaReg[0xD] & (1 << 1)));
+	return((bool) (dmaReg[0x34/4] & (1 << 1)));
+};
+
+/*********************************************************************
+* i2cStart 
+*
+* Starts i2c logic.
+*********************************************************************/
+void PulseAcq::i2cStart(void){
+	i2cReg[0x100/4] = 1;
+};
+
+/*********************************************************************
+* i2cHalt
+*
+* Halts i2c logic.
+*********************************************************************/
+void PulseAcq::i2cHalt(void){
+	i2cReg[0x100/4] = 0;
+};
+
+/*********************************************************************
+* i2cConfig
+*
+* Configures RX buffer to max depth
+*********************************************************************/
+void PulseAcq::i2cConfig(void){
+	i2cReg[0x120/4] = 0xf;
+};
+
+/*********************************************************************
+* i2cReset
+*
+* Soft resets i2c logic. 
+*********************************************************************/
+void PulseAcq::i2cReset(void){
+	i2cReg[0x40/4] = 0xA;
+};
+
+/*********************************************************************
+* i2cRead
+*
+* Read from I2C slave
+*
+* @param address I2C slave address.
+* @param data Data pointer.
+* @param dataLen Data length in bytes.
+*********************************************************************/
+void PulseAcq::i2cRead(int address, unsigned char *data, int dataLen){
+	i2cReg[0x108/4] = (1 << 8) | (address << 1) | 1;
+	i2cReg[0x108/4] = (1 << 9) | dataLen;
+
+	for(int i = 0; i < dataLen; i++){
+		while(i2cReg[0x104/4] & (1 << 6)){}; //Check RX_FIFO_EMPTY flag
+		*data = i2cReg[0x10C/4] & 0xff;
+		data++;
+	}
+};
+
+/*********************************************************************
+* i2cWrite
+*
+* Write I2C slave
+*
+* @param address I2C slave address.
+* @param data Data pointer.
+* @param dataLen Data length in bytes.
+*********************************************************************/
+void PulseAcq::i2cWrite(int address, unsigned char *data, int dataLen){
+	i2cReg[0x108/4] = (1 << 8) | (address << 1) | 0;
+
+	for(int i = 0; i < (dataLen - 1); i++){
+		while(i2cReg[0x104/4] & (1 << 4)){}; //Check TX_FIFO_FULL flag
+		i2cReg[0x108/4] = *data;
+		data++;
+	}
+	i2cReg[0x108/4] = (1 << 9) | *data;
 };

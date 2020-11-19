@@ -6,6 +6,8 @@
 #define GPIO_ADDRESS_RANGE 0x10000
 #define DMA_ADDRESS_OFFSET 0x40400000
 #define DMA_ADDRESS_RANGE 0x10000
+#define I2C_ADDRESS_OFFSET 0x41600000
+#define I2C_ADDRESS_RANGE 0x10000
 //Define buffer address offset and range. Within reserved memory region [0x10000000,0x20000000]
 #define BUFFER_ADDRESS_OFFSET 0x10000000 
 #define BUFFER_ADDRESS_RANGE 0x100000
@@ -17,6 +19,7 @@ private:
 	uint32_t gpioData = 0;
 	volatile uint32_t *gpioReg;
     volatile uint32_t *dmaReg;
+    volatile uint32_t *i2cReg;
 public:
     volatile uint64_t *buffer;
 
@@ -37,6 +40,14 @@ public:
     void dmaS2MMConfig(int bufferAddress); 
     void dmaS2MMRun(int bufferBytesLen);
     bool dmaS2MMIsIdle(void);
+
+    //I2C
+    void i2cStart(void);
+    void i2cHalt(void);
+    void i2cReset(void);
+    void i2cConfig(void);
+    void i2cRead(int address, unsigned char *data, int dataLen);
+    void i2cWrite(int address, unsigned char *data, int dataLen);
 };
 
 
