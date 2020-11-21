@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sys/mman.h>
+#include <chrono>
 #include "pulseAcqLib.h"
 using namespace std;
 
@@ -164,7 +165,9 @@ bool PulseAcq::dmaS2MMIsIdle(void){
 * Starts i2c logic.
 *********************************************************************/
 void PulseAcq::i2cStart(void){
+	
 	i2cReg[0x100/4] = 1;
+	
 };
 
 /*********************************************************************
@@ -183,12 +186,13 @@ void PulseAcq::i2cHalt(void){
 *********************************************************************/
 void PulseAcq::i2cConfig(void){
 	i2cReg[0x120/4] = 0xf;
+	i2cReg[0x100/4] = 2;
 };
 
 /*********************************************************************
 * i2cReset
 *
-* Soft resets i2c logic. 
+* Soft resets i2c logic and clears tx fifo. 
 *********************************************************************/
 void PulseAcq::i2cReset(void){
 	i2cReg[0x40/4] = 0xA;
@@ -197,39 +201,75 @@ void PulseAcq::i2cReset(void){
 /*********************************************************************
 * i2cRead
 *
-* Read from I2C slave
+* Read from I2C slave 
 *
 * @param address I2C slave address.
-* @param data Data pointer.
+* @param *dataRx Data pointer.
 * @param dataLen Data length in bytes.
+* @param timeout_us I2C read timeout (in us). 
+* @param return 0 -> successful read 1-> timeout
 *********************************************************************/
-void PulseAcq::i2cRead(int address, unsigned char *data, int dataLen){
+int PulseAcq::i2cRead(int address, unsigned char *dataRx, int dataLen, int timeout_us){
+	int returnVal = 0;
+	auto t_start = std::chrono::high_resolution_clock::now();
 	i2cReg[0x108/4] = (1 << 8) | (address << 1) | 1;
 	i2cReg[0x108/4] = (1 << 9) | dataLen;
-
 	for(int i = 0; i < dataLen; i++){
-		while(i2cReg[0x104/4] & (1 << 6)){}; //Check RX_FIFO_EMPTY flag
-		*data = i2cReg[0x10C/4] & 0xff;
-		data++;
+		while(1){  
+			if((i2cReg[0x104/4] & (1 << 6)) == 0){         //RX FIFO not empty
+				returnVal |= 0;
+				break;
+			}			
+
+			auto t_now = std::chrono::high_resolution_clock::now();
+			double elapsed_time_us = std::chrono::duration<double, std::micro>(t_now-t_start).count();
+			if(elapsed_time_us > timeout_us){              //Timeout
+				returnVal |= 1;	
+				break;
+			}
+		}
+
+		*dataRx = i2cReg[0x10C/4] & 0xff;
+		dataRx++;
 	}
+	return returnVal;
 };
+
+
 
 /*********************************************************************
 * i2cWrite
 *
-* Write I2C slave
+* Write to I2C slave 
 *
 * @param address I2C slave address.
-* @param data Data pointer.
+* @param *dataTx Data pointer.
 * @param dataLen Data length in bytes.
+* @param timeout_us I2C write timeout (in us). 
+* @param return 0 -> successful write 1-> timeout
 *********************************************************************/
-void PulseAcq::i2cWrite(int address, unsigned char *data, int dataLen){
+int PulseAcq::i2cWrite(int address, unsigned char *dataTx, int dataLen, int timeout_us){
+	int returnVal = 0;
+	auto t_start = std::chrono::high_resolution_clock::now();
 	i2cReg[0x108/4] = (1 << 8) | (address << 1) | 0;
-
 	for(int i = 0; i < (dataLen - 1); i++){
-		while(i2cReg[0x104/4] & (1 << 4)){}; //Check TX_FIFO_FULL flag
-		i2cReg[0x108/4] = *data;
-		data++;
+		i2cReg[0x108/4] = *dataTx;
+		dataTx++;
 	}
-	i2cReg[0x108/4] = (1 << 9) | *data;
+	i2cReg[0x108/4] = (1 << 9) | *dataTx;
+
+	while(1){  
+			if((i2cReg[0x104/4] & (1 << 7)) != 0){         //TX FIFO empty
+				returnVal |= 0;
+				break;
+			}			
+
+			auto t_now = std::chrono::high_resolution_clock::now();
+			double elapsed_time_us = std::chrono::duration<double, std::micro>(t_now-t_start).count();
+			if(elapsed_time_us > timeout_us){              //Timeout
+				returnVal |= 1;	
+				break;
+			}
+		}
+	return returnVal;
 };

@@ -104,5 +104,5 @@ class zynq():
 ###############################################################################
     def executeBash(self,filePath):
         self.sshExecCommand("echo "+self.SSH_PWD+" | sudo -S chmod +x "+os.path.join(self.baseDirRemote,filePath))
-        self.sshExecCommand("cd " + self.baseDirRemote  + "; chmod +x " + filePath + "; echo "+self.SSH_PWD + " | sudo -S ./" + filePath)
+        self.sshExecCommand("cd " + self.baseDirRemote  + "; echo "+self.SSH_PWD + " | sudo -S ./" + filePath)
         return

@@ -11,8 +11,7 @@
 //Define buffer address offset and range. Within reserved memory region [0x10000000,0x20000000]
 #define BUFFER_ADDRESS_OFFSET 0x10000000 
 #define BUFFER_ADDRESS_RANGE 0x100000
-//Define max buffer length (in units of 64 bits)
-#define MAX_BUFFER_LEN = 100000
+
 
 class PulseAcq{
 private: 
@@ -46,8 +45,8 @@ public:
     void i2cHalt(void);
     void i2cReset(void);
     void i2cConfig(void);
-    void i2cRead(int address, unsigned char *data, int dataLen);
-    void i2cWrite(int address, unsigned char *data, int dataLen);
+    int i2cRead(int address, unsigned char *data, int dataLen, int timeout_us);
+    int i2cWrite(int address, unsigned char *data, int dataLen, int timeout_us);
 };
 
 
