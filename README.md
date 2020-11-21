@@ -21,6 +21,7 @@
     * 63-32 : mask (used to mark the inputs on which a rising edge has been detected). Max number of detectors: 32.
 * **PLL**. Phase lock loop. 
 * **DMA**. Direct memory access. Streams 64bit timestamps from FSM to RAM. 
+* **I2C** I2C with 100kHz clk. This logic is only used in the *C++ Backend* branch of this repository. 
 
 ## Initial configuration
 1. Download the SD card image [Pynq-Cora-Z7-10-2.5.img](https://drive.google.com/file/d/1jq1uyC-ckTANllmxDi5jF78LoCh2kb4u/view?usp=sharing). 
@@ -107,6 +108,9 @@ netmask <netmask>
 | 31 | In | LVCMOS 3.3V | Timestamp bit 5 | 
 | 32 | In | LVCMOS 3.3V | Timestamp bit 6 | 
 | 33 | In | LVCMOS 3.3V | Timestamp bit 7 | 
+| SCL | In/Out | LVCMOS 3.3V | I2C clk | 
+| SDA | In/Out | LVCMOS 3.3V | I2C data | 
+
 
 ### ii) pulseGen 
 |Pin|Direction|IO Standard|Description|
