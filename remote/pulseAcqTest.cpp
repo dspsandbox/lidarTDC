@@ -6,9 +6,6 @@
 #include "pulseAcqLib.h"
 using namespace std;
 
-//I2C PARAM
-
-
 PulseAcq pulseAcq;
 int iterations,counterMax, streamUpCounter, state, counter, mask, timestamp;
 int i2cAddress, i2cDataWrite, i2cDataRead, i2cDataLen, i2cTimeout_us, i2cReturnVal;
@@ -24,7 +21,7 @@ int main() {
     i2cDataLen = 1;        //Data len in bytes
     i2cTimeout_us = 1000;  //Timeout in us
 
-    //i2c config
+    //I2C config
     pulseAcq.i2cHalt();
     pulseAcq.i2cReset();
     pulseAcq.i2cConfig();
@@ -65,7 +62,7 @@ int main() {
             cout << " |" << endl;
         }
 
-        //i2c write
+        //I2C write
         i2cDataWrite = i;    
         i2cReturnVal = pulseAcq.i2cWrite(i2cAddress, (unsigned char*) &i2cDataWrite, i2cDataLen, i2cTimeout_us);
         if(i2cReturnVal == 0){
@@ -79,7 +76,7 @@ int main() {
             pulseAcq.i2cStart();
         }
 
-        //i2c read
+        //I2C read
         i2cReturnVal = pulseAcq.i2cRead(i2cAddress, (unsigned char*) &i2cDataRead, i2cDataLen, i2cTimeout_us);
         if(i2cReturnVal == 0){
             cout << "I2C read successful. Data: " + std::to_string(i2cDataRead) << endl; 
