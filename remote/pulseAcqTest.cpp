@@ -42,7 +42,7 @@ int main() {
         while(pulseAcq.dmaS2MMIsIdle() == false){};       //Wait until acquisistion is finished
         streamUpCounter = pulseAcq.getStreamUpCounter();  //Get number of acquired pulse events
         state = pulseAcq.getState();                      //Get state of acquisiston logic
-        pulseAcq.setResetn(0);                            //Disable acquisistion logic */
+        pulseAcq.setResetn(0);                            //Disable acquisistion logic
         
         //Print results
         cout << endl;
