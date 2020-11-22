@@ -19,6 +19,7 @@ private:
 	volatile uint32_t *gpioReg;
     volatile uint32_t *dmaReg;
     volatile uint32_t *i2cReg;
+    int buffLen;
 public:
     volatile uint64_t *buffer;
 
@@ -36,8 +37,8 @@ public:
     void dmaS2MMStart(void);
     void dmaS2MMHalt(void);
     void dmaS2MMReset(void);
-    void dmaS2MMConfig(int bufferAddress); 
-    void dmaS2MMRun(int bufferBytesLen);
+    void dmaS2MMConfig(int bufferAddress,int bufferLen); 
+    void dmaS2MMRun(void);
     bool dmaS2MMIsIdle(void);
 
     //I2C

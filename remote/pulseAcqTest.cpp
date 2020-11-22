@@ -32,17 +32,17 @@ int main() {
 
     for(int i = 0; i<iterations; i++){
         //Acquisition
-        pulseAcq.setResetn(1);                            //Enable acquisistion logic
-        pulseAcq.setCounterMax(counterMax);               //Set integration time
-        pulseAcq.dmaS2MMHalt();                           //Halt DMA
-        pulseAcq.dmaS2MMReset();                          //Reset DMA
-        pulseAcq.dmaS2MMConfig(BUFFER_ADDRESS_OFFSET);    //Config buffer address offset
-        pulseAcq.dmaS2MMStart();                          //Start DMA engine
-        pulseAcq.dmaS2MMRun(BUFFER_ADDRESS_RANGE);        //Run DMA engine
-        while(pulseAcq.dmaS2MMIsIdle() == false){};       //Wait until acquisistion is finished
-        streamUpCounter = pulseAcq.getStreamUpCounter();  //Get number of acquired pulse events
-        state = pulseAcq.getState();                      //Get state of acquisiston logic
-        pulseAcq.setResetn(0);                            //Disable acquisistion logic */
+        pulseAcq.setResetn(1);                                                 //Enable acquisistion logic
+        pulseAcq.setCounterMax(counterMax);                                    //Set integration time
+        pulseAcq.dmaS2MMHalt();                                                //DMA
+        pulseAcq.dmaS2MMReset();                         
+        pulseAcq.dmaS2MMConfig(BUFFER_ADDRESS_OFFSET,BUFFER_ADDRESS_RANGE);    
+        pulseAcq.dmaS2MMStart();                          
+        pulseAcq.dmaS2MMRun();       
+        while(pulseAcq.dmaS2MMIsIdle() == false){};                           //Wait until acquisistion is finished
+        streamUpCounter = pulseAcq.getStreamUpCounter();                      //Get number of acquired pulse events
+        state = pulseAcq.getState();                                          //Get state of acquisiston logic
+        pulseAcq.setResetn(0);                                                //Disable acquisistion logic 
         
         //Print results
         cout << endl;

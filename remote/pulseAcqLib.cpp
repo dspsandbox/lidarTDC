@@ -130,22 +130,23 @@ void PulseAcq::dmaS2MMReset(void){
 * @param bufferAddress Buffer address offset in bytes. Please make sure 
 *                      to be within a memory region that has been reserved 
 *                      for DMA operations.
+* @param bufferLen     Buffer length in bytes. Please make sure that the 
+                       total number of bytes transfered in a single  
+*                      DMA operation stays below this value.
 *********************************************************************/
-void PulseAcq::dmaS2MMConfig(int bufferAddress){
+void PulseAcq::dmaS2MMConfig(int bufferAddress,int bufferLen){
 	dmaReg[0x48/4] = (uint32_t) bufferAddress;
+	buffLen = bufferLen;
+
 }; 
 
 /*********************************************************************
 * dmaS2MMRun 
 *
 * Runs the stream to memory mapped DMA channel. 
-*
-* @param bufferBytesLen Buffer size. Please make sure that the total 
-*                       number of bytes transfered in a single  
-*                       DMA operation stays below this value.
 *********************************************************************/
-void PulseAcq::dmaS2MMRun(int bufferBytesLen){
-	dmaReg[0x58/4] = (uint32_t) bufferBytesLen;
+void PulseAcq::dmaS2MMRun(void){
+	dmaReg[0x58/4] = (uint32_t) buffLen;
 };
 
 /*********************************************************************
